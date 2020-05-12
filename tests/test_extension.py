@@ -4,8 +4,8 @@ from unittest import mock
 
 @mock.patch('importlib.import_module')
 def test_extension_meta_data(mock_import_module):
-    module = mock_import_module.return_value
-    module.__extension__ = {
+    # Create a mock extension.
+    mock_import_module.return_value.__extension__ = {
         'name': 'Name Field',
         'version': 'Version Field',
         'description': 'Description Field',
@@ -22,10 +22,9 @@ def test_extension_meta_data(mock_import_module):
 
 @mock.patch('importlib.import_module')
 def test_extension_call(mock_import_module):
-    module = mock_import_module.return_value
-
+    # Create mocks of extension and its implementation.
     mock_func = mock.Mock()
-    module.__extension__ = {
+    mock_import_module.return_value.__extension__ = {
         'main': mock_func,
         'arguments': {
             'x': {'type': int},
@@ -37,6 +36,7 @@ def test_extension_call(mock_import_module):
     ext.call('input_files', 'output_files', 'workspace', {'x': '5'})
     assert mock_func.called
 
+    # Check if the arguments are casted to the given types.
     called_args, _ = mock_func.call_args
     assert called_args[0] == 'input_files'
     assert called_args[1] == 'output_files'
@@ -48,6 +48,7 @@ def test_extension_call(mock_import_module):
     ext.call('input_files', 'output_files', 'workspace', {'x': '5', 'y': 2.71})
     assert mock_func.called
 
+    # Check if the arguments are casted to the given types.
     called_args, _ = mock_func.call_args
     assert called_args[0] == 'input_files'
     assert called_args[1] == 'output_files'
