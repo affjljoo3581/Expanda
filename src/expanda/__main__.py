@@ -4,32 +4,6 @@ from configparser import ConfigParser
 from .extension import Extension
 
 
-parser = argparse.ArgumentParser(
-    prog='expanda',
-    description='Expanda - A universal integrated corpus generator')
-subparsers = parser.add_subparsers(dest='command', required=True)
-
-# command line: expanda list [config]
-list_parser = subparsers.add_parser(
-    'list', help='list required extensions in the workspace')
-list_parser.add_argument(
-    'config', default='expanda.cfg', nargs='?',
-    help='expanda configuration file')
-
-# command line: expanda show [extension]
-show_parser = subparsers.add_parser(
-    'show', help='show extension information')
-show_parser.add_argument(
-    'extension', help='module name of certain extension')
-
-# command line: expanda build [config]
-build_parser = subparsers.add_parser(
-    'build', help='build dataset through given corpora')
-build_parser.add_argument(
-    'config', default='expanda.cfg', nargs='?',
-    help='expanda configuration file')
-
-
 def _show_extension_details(module_name):
     # Show the details of extension.
     ext = Extension(module_name)
@@ -59,16 +33,36 @@ def _show_required_extension_list(config_file):
         print(f'{ext[:25]:25s}{version[:10]:10s}')
 
 
-def main():
-    args = parser.parse_args()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        prog='expanda',
+        description='Expanda - A universal integrated corpus generator')
+    subparsers = parser.add_subparsers(dest='command', required=True)
 
+    # command line: expanda list [config]
+    list_parser = subparsers.add_parser(
+        'list', help='list required extensions in the workspace')
+    list_parser.add_argument(
+        'config', default='expanda.cfg', nargs='?',
+        help='expanda configuration file')
+
+    # command line: expanda show [extension]
+    show_parser = subparsers.add_parser(
+        'show', help='show extension information')
+    show_parser.add_argument(
+        'extension', help='module name of certain extension')
+
+    # command line: expanda build [config]
+    build_parser = subparsers.add_parser(
+        'build', help='build dataset through given corpora')
+    build_parser.add_argument(
+        'config', default='expanda.cfg', nargs='?',
+        help='expanda configuration file')
+
+    args = parser.parse_args()
     if args.command == 'list':
         _show_required_extension_list(args.config)
     elif args.command == 'show':
         _show_extension_details(args.extension)
     elif args.command == 'build':
         pass
-
-
-if __name__ == '__main__':
-    main()
