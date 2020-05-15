@@ -2,13 +2,14 @@ import os
 import tqdm
 import random
 import argparse
+from typing import List, IO
 
 
 _best_seek_cnt = 100000
 _max_buckets = 512
 
 
-def _get_file_lines(fp):
+def _get_file_lines(fp: IO[bytes]) -> int:
     fp.seek(0)
 
     num_lines = 0
@@ -18,7 +19,7 @@ def _get_file_lines(fp):
     return num_lines
 
 
-def _list_seek_offsets(fp, stride=1):
+def _list_seek_offsets(fp: IO[bytes], stride: int = 1) -> List[int]:
     fp.seek(0)
 
     offsets = []
@@ -33,7 +34,7 @@ def _list_seek_offsets(fp, stride=1):
     return offsets
 
 
-def _append_data_to_file(src, dst):
+def _append_data_to_file(src: IO[bytes], dst: IO[bytes]):
     while True:
         data = src.read(2048)
         dst.write(data)
@@ -42,11 +43,24 @@ def _append_data_to_file(src, dst):
             break
 
 
-def shuffle(input_file, output_file, temporary, _use_tqdm=False):
+def shuffle(input_file: str, output_file: str, temporary: str):
+    r"""Shuffle text file with temporary buckets.
+
+    Caution:
+        Instead of allocating memory directly, this shuffling algorithm uses
+        temporary bucket files which are in `temporary` directory. Please be
+        careful not to delete the temporary files while executing this
+        function.
+
+    Arguments:
+        input_file (str): Input file path.
+        output_file (str): Output file path.
+        temporary (str): Temporary directory where the buckets would be saved.
+    """
     src = open(input_file, 'rb')
 
     # Calculate optimimum number of strides and buckets.
-    stride = _get_file_lines(src) // _best_seek_cnt
+    stride = max(1, _get_file_lines(src) // _best_seek_cnt)
     buckets = min(stride * 2, _max_buckets)
     print(f'[*] optimum stride: {stride}, buckets: {buckets}')
 
@@ -60,16 +74,20 @@ def shuffle(input_file, output_file, temporary, _use_tqdm=False):
     random.shuffle(offsets)
     print(f'[*] successfully shuffle offsets. total offsets: {len(offsets)}')
 
-    if _use_tqdm:
-        offsets = tqdm.tqdm(offsets, desc='[*] shuffle input file')
-
-    for off in offsets:
+    for off in tqdm.tqdm(offsets, desc='[*] shuffle input file'):
         # Move to the random offset.
         src.seek(off)
 
         for _ in range(stride):
-            # Write each line to random bucket.
-            dsts[random.randint(0, buckets - 1)].write(src.readline())
+            line = src.readline()
+            if not line:
+                break
+
+            if not line.endswith(b'\n'):
+                line = line + b'\n'
+
+            # Write the line to random bucket.
+            dsts[random.randint(0, buckets - 1)].write(line)
 
     # Close all resources.
     src.close()
@@ -89,8 +107,9 @@ def shuffle(input_file, output_file, temporary, _use_tqdm=False):
         os.remove(os.path.join(temporary, f'bucket{i}'))
 
 
-def main():
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(
+        prog='expanda.shuffling',
         description='approximately shuffle text file.')
     parser.add_argument('input')
     parser.add_argument('output')
@@ -105,12 +124,8 @@ def main():
         remove_after_shuffling = True
 
     # Shuffle the text file.
-    shuffle(args.input, args.output, args.tmp, True)
+    shuffle(args.input, args.output, args.tmp)
 
     # Remove created temporary directory.
     if remove_after_shuffling:
         os.removedirs(args.tmp)
-
-
-if __name__ == '__main__':
-    main()
