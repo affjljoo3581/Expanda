@@ -1,12 +1,13 @@
 import os
 import tqdm
 import random
+import shutil
 import argparse
 from typing import List, IO
 
 
-_best_seek_cnt = 100000
-_max_buckets = 512
+_BEST_SEEK_CNT = 100000
+_MAX_BUCKETS = 512
 
 
 def _get_file_lines(fp: IO[bytes]) -> int:
@@ -34,15 +35,6 @@ def _list_seek_offsets(fp: IO[bytes], stride: int = 1) -> List[int]:
     return offsets
 
 
-def _append_data_to_file(src: IO[bytes], dst: IO[bytes]):
-    while True:
-        data = src.read(2048)
-        dst.write(data)
-
-        if len(data) < 2048:
-            break
-
-
 def shuffle(input_file: str, output_file: str, temporary: str):
     r"""Shuffle text file with temporary buckets.
 
@@ -60,8 +52,8 @@ def shuffle(input_file: str, output_file: str, temporary: str):
     src = open(input_file, 'rb')
 
     # Calculate optimimum number of strides and buckets.
-    stride = max(1, _get_file_lines(src) // _best_seek_cnt)
-    buckets = min(stride * 2, _max_buckets)
+    stride = max(1, _get_file_lines(src) // _BEST_SEEK_CNT)
+    buckets = min(stride * 2, _MAX_BUCKETS)
     print(f'[*] optimum stride: {stride}, buckets: {buckets}')
 
     # Create temporary bucket files.
@@ -99,7 +91,7 @@ def shuffle(input_file: str, output_file: str, temporary: str):
     with open(output_file, 'wb') as dst:
         for i in range(buckets):
             with open(os.path.join(temporary, f'bucket{i}'), 'rb') as src:
-                _append_data_to_file(src, dst)
+                shutil.copyfileobj(src, dst)
     print('[*] finish copying buckets. remove the buckets...')
 
     # Remove the temporary bucket files.
