@@ -1,8 +1,9 @@
 import importlib
+from typing import Dict
 
 
 class Extension(object):
-    def __init__(self, module_name):
+    def __init__(self, module_name: str):
         # Import extension module.
         module = importlib.import_module(module_name)
 
@@ -28,7 +29,8 @@ class Extension(object):
         self.main_func = ext.get('main')
         self.arg_reqs = ext.get('arguments', {})
 
-    def call(self, input_files, output_files, workspace, raw_args):
+    def call(self, input_file: str, output_file: str, temporary: str,
+             raw_args: Dict[str, str]):
         args = {}
         for name, req in self.arg_reqs.items():
             if 'default' not in req and name not in raw_args:
@@ -38,4 +40,4 @@ class Extension(object):
             args[name] = req['type'](raw_args.get(name, req.get('default')))
 
         # Call extension main function with casted arguments.
-        self.main_func(input_files, output_files, workspace, args)
+        self.main_func(input_file, output_file, temporary, args)
