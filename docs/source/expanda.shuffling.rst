@@ -5,16 +5,17 @@ expanda.shuffling
 Introduction
 ~~~~~~~~~~~~
 Common shuffling algorithms ensure almost perfect randomness and are efficient
-(usually have :math:`O(n)` complexity). However, they consume a lot of memory
-while shuffling large files. For instance, using shuf_ to shuffle 5GB file may
-occur memory error. In most cases, the whole data would be copied to the
-memory. Besides, some algorithms require several times more memory.
+(usually have :math:`O(n)` complexity). However, they consume a lot of memories
+while shuffling large files. For instance, using shuf_ to shuffle 5GB of file
+may occur memory error. In most cases, the whole data would be copied to the
+memory. Besides, some algorithms require several times more than the memory.
 
-Let's consider the case of solving NLP problems in deep learning. For a larger
-corpus leads better performance, many texts should be gathered into the corpus.
-GPT-2 was trained with **40GB** text ([1]_) and RoBERTa was with **160GB** text
-([2]_). In fact, shuffling whole data in the memory is impossible. Due to the
-large file size, other memory-efficient methods are needed.
+Let's consider the case of solving NLP problems in deep learning. Because a
+larger corpus leads better performance, many texts should be gathered into the
+corpus. GPT-2 was trained with **40GB** text ([#]_) and RoBERTa was so with
+**160GB** text ([#]_). In fact, shuffling whole data in the memory is
+impossible. Due to the large file size, other memory-efficient methods are
+needed.
 
 The simplest way to solve the problem is in **seeking**. First, collect the
 starting position of each line. It is as follows:
@@ -28,7 +29,7 @@ starting position of each line. It is as follows:
         offsets.append(src.tell())
         line = src.readline()
 
-After collecting the positions, just shuffle them. Seeking to each offset and
+After collecting the positions, simply shuffle them. Seeking to each offset and
 copying lines will provide complete shuffling. It is as described below:
 
 .. code-block:: python
@@ -42,7 +43,7 @@ However, this algorithm empirically takes minutes to shuffle a mere 500MB text
 which consists of 10M sentences while shuf_ takes about 5 seconds. Though less
 memory usage is an obvious advantage, extremely slow speed is fatal.
 
-Theoretically, complexity of *seeking* is :math:`O(1)`. Then why the above
+Theoretically, complexity of *seeking* is :math:`O(1)`. Then, why the above
 codes are enormously inefficient? That is probably related to python's I/O
 implementation. First, **python is too slow to handle large files in detail**.
 Python implementation of shuf_ is about 3 times slower than the original. To
@@ -59,9 +60,9 @@ and randomly distributed to buckets. Basically, twice as many buckets as chunks
 are needed. After splitting the file randomly, the buckets will be merged into
 one.
 
-We observed that the approximation ensures almost perfect randomness and seems
-sufficient in natural language. We tested the algorithm with 5GB file and it
-takes about 3 minutes without any memory errors.
+We have observed that the approximation ensures almost perfect randomness and
+seems sufficient in natural language. We tested the algorithm with 5GB of file
+and it takes about 3 minutes without any memory errors.
 
 You can run this module alone for shuffling. See `Command-line Usage`_.
 
@@ -72,7 +73,7 @@ Functions
 Command-line Usage
 ~~~~~~~~~~~~~~~~~~
 
-.. code-block::
+.. code-block:: console
 
     usage: expanda.shuffling [-h] [--tmp TMP] input output
 
@@ -89,6 +90,6 @@ Command-line Usage
 
 References
 ~~~~~~~~~~
-.. [1] https://openai.com/blog/better-language-models/
-.. [2] Y\. Liu, M. Ott et al. 2019. "RoBERTa: A Robustly Optimized BERT Pretraining Approach"
+.. [#] https://openai.com/blog/better-language-models/
+.. [#] Y\. Liu, M. Ott et al. 2019. "RoBERTa: A Robustly Optimized BERT Pretraining Approach"
 .. _shuf: https://www.gnu.org/software/coreutils/manual/html_node/shuf-invocation.html

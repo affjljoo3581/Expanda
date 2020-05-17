@@ -13,6 +13,12 @@ Expanda documentation
    expanda.shuffling
    expanda.tokenization
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Extensions
+
+   expanda.ext.wiki
+   expanda.ext.namu
 
 
 Indices and tables
