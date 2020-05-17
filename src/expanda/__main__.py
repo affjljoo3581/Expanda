@@ -86,22 +86,25 @@ def _build_corpus(config_file: str):
                             dict(config.items(ext)))
 
     # Gather the extracted plain text.
-    print('[*] merge extracted texts...')
+    print('[*] merge extracted texts.')
     with open(os.path.join(temporary, 'integrated'), 'wb') as dst:
         for _, input_file in input_files:
             with open(os.path.join(temporary, input_file), 'rb') as src:
                 shutil.copyfileobj(src, dst)
 
     # Shuffle the text.
-    print('[*] start shuffling merged corpus.')
+    print('[*] start shuffling merged corpus...')
     shuffle(os.path.join(temporary, 'integrated'), raw_corpus, temporary)
 
     # Train subword tokenizer and tokenize the corpus.
+    print('[*] complete preparing corpus. start training tokenizer...')
     train_tokenizer(raw_corpus, vocab, temporary, subset_size, vocab_size,
                     unk_token, control_tokens)
+    print('[*] create tokenized corpus.')
     tokenize_corpus(raw_corpus, corpus, vocab, unk_token, control_tokens)
 
     # Remove temporary directory.
+    print('[*] remove temporary directory.')
     shutil.rmtree(temporary)
 
     print('[*] finish building corpus.')
