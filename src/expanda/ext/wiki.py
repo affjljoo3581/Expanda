@@ -38,7 +38,7 @@ def _clean_wiki_text(code: str, ns: List[str] = []):
     for section in wiki.get_sections(flat=True,
                                      include_lead=True,
                                      include_headings=True):
-        # Remove elements filtered by above functions. 
+        # Remove elements filtered by above functions.
         for obj in section.ifilter_headings(recursive=True):
             remove_element(section, obj)
         for obj in section.ifilter_wikilinks(matches=filter_wikilinks,
