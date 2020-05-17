@@ -49,7 +49,7 @@ def train_tokenizer(
             be saved.
         subset_size (int): The maximum number of lines in the subset.
         vocab_size (int): The number of subwords in the vocabulary.
-        unk_tokens (str): **Unknown** token in the vocabulary.
+        unk_tokens (str): Unknown token in the vocabulary.
         control_tokens (list): Control tokens in the vocabulary.
 
     .. _tokenizers: https://github.com/huggingface/tokenizers
@@ -95,7 +95,7 @@ def tokenize_corpus(
         input_file (str): Input corpus file path.
         output_file (str): Output file path.
         vocab_file (str): Trained vocabulary file path.
-        unk_token (str): **Unknown** token in the vocabulary.
+        unk_token (str): Unknown token in the vocabulary.
         control_tokens (list): Control tokens in the vocabulary.
     """
     # Create `WordPiece` model and add special tokens. Note that `unk_token`
@@ -155,9 +155,9 @@ if __name__ == '__main__':
     train_parser.add_argument('--vocab_size', default=8000, type=int,
                               help='number of subwords in vocabulary')
     train_parser.add_argument('--unk_token', default='<unk>',
-                              help='Unknown token name')
+                              help='unknown token name')
     train_parser.add_argument('--control_tokens', default=[], nargs='*',
-                              help='Control token names except unknown token')
+                              help='control token names except unknown token')
 
     # command line: expanda.tokenization tokenize ...
     tokenize_parser = subparsers.add_parser(
@@ -166,10 +166,10 @@ if __name__ == '__main__':
     tokenize_parser.add_argument('output')
     tokenize_parser.add_argument('vocab')
     tokenize_parser.add_argument(
-        '--unk_token', default='<unk>', help='Unknown token name')
+        '--unk_token', default='<unk>', help='unknown token name')
     tokenize_parser.add_argument(
         '--control_tokens', default=[], nargs='*',
-        help='Control token names except unknown token')
+        help='control token names except unknown token')
 
     args = parser.parse_args()
     if args.command == 'train':
