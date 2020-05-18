@@ -56,7 +56,7 @@ class Extension(object):
             input_file (str): Input file path.
             output_file (str): Output file path.
             temporary (str): Temporary directory where the extension would use.
-            raw_args (dict): String-formatted raw arguments for the extension.
+            raw_args (dict): String-formatted raw arguments for extension.
         """
         args = {}
         for name, req in self.arg_reqs.items():
