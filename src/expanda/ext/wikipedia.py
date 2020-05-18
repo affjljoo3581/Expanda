@@ -56,6 +56,7 @@ def _clean_wiki_text(code: str, ns: List[str] = []):
     # Post-process cleaned wiki article content through simple sentence
     # testing.
     regex_brackets = re.compile(r'\([^(]*?\)')
+    regex_spacing = re.compile(r'\s+', re.M)
 
     filtered = []
     for text in section_text:
@@ -64,9 +65,10 @@ def _clean_wiki_text(code: str, ns: List[str] = []):
             if not line or line[-1] not in '!?.':
                 break
 
-            # Remove nested brackets.
-            while regex_brackets.match(line):
+            # Remove nested brackets and unnecessary spaces.
+            while regex_brackets.search(line):
                 line = regex_brackets.sub('', line)
+            line = regex_spacing.sub(' ', line)
 
             # Add post-processed text.
             filtered.append(line)
@@ -110,9 +112,11 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
     with open(input_file, 'r', encoding='utf-8') as src, \
             open(output_file, 'w', encoding='utf-8') as dst:
         for line in src:
-            dst.write('\n'.join([
-                s for s in tokenize_sentence(line)
-                if s and len(s) >= min_len]) + '\n')
+            for s in tokenize_sentence(line):
+                if len(s.strip()) < min_len:
+                    break
+
+                dst.write(s.strip() + '\n')
 
 
 def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
