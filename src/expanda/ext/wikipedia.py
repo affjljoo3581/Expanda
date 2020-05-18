@@ -59,13 +59,7 @@ def _clean_wiki_text(code: str, ns: List[str] = []):
     for text in section_text:
         for line in text.strip().splitlines():
             # Check if text has normal punctuation.
-            ordinary = False
-            for punct in '!?.':
-                if line.endswith(punct):
-                    ordinary = True
-                    break
-
-            if ordinary:
+            if line and line[-1] in '!?.':
                 filtered.append(line)
 
     return '\n'.join(filtered)
