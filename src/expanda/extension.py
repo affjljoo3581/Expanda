@@ -11,8 +11,8 @@ class Extension(object):
     them.
 
     Caution:
-        This class dynamically import the given `module_name`. Please make sure
-        that the extension module can be imported in current environment.
+        This class dynamically import the given `module_name`. Make sure that
+        the extension module can be imported in current environment.
 
     Arguments:
         module_name (str): Module name of extension.
