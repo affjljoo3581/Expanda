@@ -1,6 +1,0 @@
-expanda.ext.wiki
-================
-
-Introduction
-------------
-

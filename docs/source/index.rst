@@ -12,12 +12,14 @@ Expanda documentation
 
    expanda.shuffling
    expanda.tokenization
+   expanda.extension
 
 .. toctree::
    :maxdepth: 1
    :caption: Extensions
+   :name: extensions
 
-   expanda.ext.wiki
+   expanda.ext.wikipedia
    expanda.ext.namu
 
 
