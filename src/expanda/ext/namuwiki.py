@@ -46,18 +46,15 @@ def _clean_wiki_text(code: str, patterns: Dict[str, re.Pattern]) -> str:
 
 
 def _process_article_worker(output_file: str, queue: Queue):
-    file = open(output_file, 'w', encoding='utf-8')
+    with open(output_file, 'w', encoding='utf-8') as fp:
+        patterns = _create_pattern_dict()
+        while True:
+            code = queue.get()
+            if code is None:
+                break
 
-    patterns = _create_pattern_dict()
-    while True:
-        code = queue.get()
-        if code is None:
-            break
-
-        # Write cleaned wiki articles into the output file.
-        file.write(_clean_wiki_text(code, patterns) + '\n')
-
-    file.close()
+            # Write cleaned wiki articles into the output file.
+            fp.write(_clean_wiki_text(code, patterns) + '\n')
 
 
 def _tokenize_sentences_worker(input_file: str, output_file: str,

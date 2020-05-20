@@ -77,17 +77,14 @@ def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
 
 
 def _process_article_worker(output_file: str, ns: List[str], queue: Queue):
-    file = open(output_file, 'w', encoding='utf-8')
+    with open(output_file, 'w', encoding='utf-8') as fp:
+        while True:
+            code = queue.get()
+            if code is None:
+                break
 
-    while True:
-        code = queue.get()
-        if code is None:
-            break
-
-        # Write cleaned wiki articles into the output file.
-        file.write(_clean_wiki_text(code, ns) + '\n')
-
-    file.close()
+            # Write cleaned wiki articles into the output file.
+            fp.write(_clean_wiki_text(code, ns) + '\n')
 
 
 def _tokenize_sentences_worker(input_file: str, output_file: str,
