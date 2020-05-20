@@ -132,8 +132,8 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
                 shutil.copyfileobj(src, dst)
 
     # Remove temporary files.
-    #for i in range(args['num-cores']):
-    #    os.remove(os.path.join(temporary, f'split{i}'))
+    for i in range(args['num-cores']):
+        os.remove(os.path.join(temporary, f'split{i}'))
 
 
 __extension__ = {
