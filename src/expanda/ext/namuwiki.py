@@ -15,7 +15,7 @@ def _create_pattern_dict() -> Dict[str, re.Pattern]:
             'italics': re.compile(r'\'\'(.*?)\'\''),
             'link': re.compile(r'\[\[([^]]*?\|)?(?P<name>.*?)(#.*?)?\]\]'),
             'macro': re.compile(r'\[.*?\]'),
-            'others': re.compile(r'^[ >].*?', re.M),
+            'others': re.compile(r'^[ >*|].*?', re.M),
             'spacing': re.compile(r'\s{2}')}
 
 
