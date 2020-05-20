@@ -6,18 +6,30 @@
 Expanda documentation
 =====================
 
+Introduction
+------------
+**Expanda** is an **integrated corpus-building environment**. Expanda provides
+integrated pipelines for building corpus dataset. Building corpus dataset
+requires several complicated pipelines such as parsing, shuffling and
+tokenizations. If the corpora are gathered from different applications, it also
+be a problem to parse various formats. Expanda helps to build corpus simply at
+once by setting build configuration.
+
+Modules
+----------
 .. toctree::
    :maxdepth: 1
-   :caption: Modules
 
    expanda.shuffling
    expanda.tokenization
    expanda.extension
 
+.. _`extensions`:
+
+Extensions
+----------
 .. toctree::
    :maxdepth: 1
-   :caption: Extensions
-   :name: extensions
 
    expanda.ext.wikipedia
    expanda.ext.namuwiki
@@ -27,5 +39,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
