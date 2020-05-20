@@ -11,12 +11,12 @@ Introduction
 **Expanda** is an **integrated corpus-building environment**. Expanda provides
 integrated pipelines for building corpus dataset. Building corpus dataset
 requires several complicated pipelines such as parsing, shuffling and
-tokenizations. If the corpora are gathered from different applications, it also
+tokenization. If the corpora are gathered from different applications, it would
 be a problem to parse various formats. Expanda helps to build corpus simply at
 once by setting build configuration.
 
 Modules
-----------
+-------
 
 
 .. toctree::
