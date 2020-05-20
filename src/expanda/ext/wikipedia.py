@@ -155,6 +155,7 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
                     args=(os.path.join(temporary, f'wiki{i}'), ns, queue))
         w.daemon = True
         w.start()
+
         workers.append(w)
 
     # Parse articles from dump file and put into the queue.
@@ -227,7 +228,7 @@ __extension__ = {
     'author': 'expanda',
     'main': _extract_wiki_corpus,
     'arguments': {
-        'num-cores': {'type': int, 'default': -1},
+        'num-cores': {'type': int, 'default': 1},
         'min-length': {'type': int, 'default': 50}
     }
 }
