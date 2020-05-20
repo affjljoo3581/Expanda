@@ -91,10 +91,12 @@ def _build_corpus(config_file: str):
         for _, input_file in input_files:
             with open(os.path.join(temporary, input_file), 'rb') as src:
                 shutil.copyfileobj(src, dst)
+            os.remove(os.path.join(temporary, input_file))
 
     # Shuffle the text.
     print('[*] start shuffling merged corpus...')
     shuffle(os.path.join(temporary, 'integrated'), raw_corpus, temporary)
+    os.remove(os.path.join(temporary, 'integrated'))
 
     # Train subword tokenizer and tokenize the corpus.
     print('[*] complete preparing corpus. start training tokenizer...')
