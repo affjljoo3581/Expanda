@@ -20,7 +20,7 @@ Expanda documentation
    :name: extensions
 
    expanda.ext.wikipedia
-   expanda.ext.namu
+   expanda.ext.namuwiki
 
 
 Indices and tables
