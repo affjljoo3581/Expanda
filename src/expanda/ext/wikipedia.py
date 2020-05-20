@@ -8,7 +8,7 @@ from typing import List, Dict, Any
 from multiprocessing import Process, Queue
 
 
-def _clean_wiki_text(code: str, ns: List[str] = []):
+def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
     # Parse wiki code by using `mwparserfromhell` and create namespace-based
     # wiki-link pattern.the
     wiki = mw.parse(code)
@@ -63,7 +63,7 @@ def _clean_wiki_text(code: str, ns: List[str] = []):
         for line in text.strip().splitlines():
             # Check if text has normal punctuation.
             if not line or line[-1] not in '!?.':
-                break
+                continue
 
             # Remove nested brackets and unnecessary spaces.
             while regex_brackets.search(line):
@@ -85,7 +85,7 @@ def _process_article_worker(output_file: str, ns: List[str], queue: Queue):
             break
 
         # Write cleaned wiki articles into the output file.
-        file.write(_clean_wiki_text(code, ns))
+        file.write(_clean_wiki_text(code, ns) + '\n')
 
     file.close()
 
