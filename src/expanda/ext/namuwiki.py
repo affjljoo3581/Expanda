@@ -107,6 +107,7 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
     for w in workers:
         w.join()
 
+    # Start tokenization processes.
     workers = []
     for i in range(args['num-cores']):
         w = Process(target=_tokenize_sentences_worker,
@@ -118,16 +119,19 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
 
         workers.append(w)
 
+    # Wait for terminating the processes and remove temporarily created files.
     for w in workers:
         w.join()
     for i in range(args['num-cores']):
         os.remove(os.path.join(temporary, f'wiki{i}'))
 
+    # Merge all tokenized files into `output_file`.
     with open(output_file, 'wb') as dst:
         for i in range(args['num-cores']):
             with open(os.path.join(temporary, f'split{i}'), 'rb') as src:
                 shutil.copyfileobj(src, dst)
 
+    # Remove temporary files.
     for i in range(args['num-cores']):
         os.remove(os.path.join(temporary, f'split{i}'))
 
