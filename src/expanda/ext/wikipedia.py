@@ -114,7 +114,7 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
         for line in src:
             for s in tokenize_sentence(line):
                 if len(s.strip()) < min_len:
-                    break
+                    continue
 
                 dst.write(s.strip() + '\n')
 

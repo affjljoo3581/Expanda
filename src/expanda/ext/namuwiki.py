@@ -67,7 +67,7 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
         for line in src:
             for s in kss.split_sentences(line):
                 if len(s.strip()) < min_len:
-                    break
+                    continue
 
                 dst.write(s.strip() + '\n')
 
@@ -111,9 +111,9 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
     workers = []
     for i in range(args['num-cores']):
         w = Process(target=_tokenize_sentences_worker,
-                    args=(os.path.join(temporary, f'wiki{i}',
+                    args=(os.path.join(temporary, f'wiki{i}'),
                           os.path.join(temporary, f'split{i}'),
-                          args['min-length'])))
+                          args['min-length']))
         w.daemon = True
         w.start()
 
@@ -132,8 +132,8 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
                 shutil.copyfileobj(src, dst)
 
     # Remove temporary files.
-    for i in range(args['num-cores']):
-        os.remove(os.path.join(temporary, f'split{i}'))
+    #for i in range(args['num-cores']):
+    #    os.remove(os.path.join(temporary, f'split{i}'))
 
 
 __extension__ = {
