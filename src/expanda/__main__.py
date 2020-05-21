@@ -133,10 +133,10 @@ def _build_corpus(config_file: str):
     print('[*] merge extracted texts.')
     integrate_filename = random_filename(temporary)
     with open(integrate_filename, 'wb') as dst:
-        for _, input_file in input_files:
-            with open(os.path.join(temporary, input_file), 'rb') as src:
+        for name in extract_filenames:
+            with open(name, 'rb') as src:
                 shutil.copyfileobj(src, dst)
-            os.remove(os.path.join(temporary, input_file))
+            os.remove(name)
 
     # Shuffle the text.
     print('[*] start shuffling merged corpus...')
