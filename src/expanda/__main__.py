@@ -49,7 +49,8 @@ def _show_required_extension_list(config_file: str):
         print(f'{ext[:25]:25s}{version[:10]:10s}')
 
 
-def _balancing_corpora(input_files: List[str], temporary: str):
+def _balancing_corpora(input_files: List[str], corpus_names: List[str],
+                       temporary: str):
     corpus_size = [os.path.getsize(input_file)
                    for input_file in input_files]
 
@@ -58,14 +59,15 @@ def _balancing_corpora(input_files: List[str], temporary: str):
     expand_rate = [math.floor(max_size / size) for size in corpus_size]
 
     print('[*] balance the size for extracted texts.')
-    for input_file, rate in zip(input_files, expand_rate):
+    for input_file, corpus_name, rate in zip(input_files,
+                                             corpus_names,
+                                             expand_rate):
         # Skip if no repetition case.
         if rate == 1:
             continue
 
         # Rename the origin file.
-        print(f'[*] corpus [{input_file.split("/")[-1]}] will be repeated'
-              f' {rate} times.')
+        print(f'[*] corpus [{corpus_name}] will be repeated {rate} times.')
 
         # Repeat the texts and save to the path of origin file.
         repeat_filename = random_filename(temporary)
@@ -123,7 +125,9 @@ def _build_corpus(config_file: str):
 
     # Balance the size of each corpus.
     if config['build'].get('balancing', '').lower() == 'true':
-        _balancing_corpora(extract_filenames, temporary)
+        _balancing_corpora(extract_filenames,
+                           [name for _, name in input_files],
+                           temporary)
 
     # Gather the extracted plain text.
     print('[*] merge extracted texts.')
