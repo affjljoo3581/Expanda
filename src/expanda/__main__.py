@@ -1,11 +1,14 @@
 import re
 import os
+import math
 import shutil
 import argparse
 from configparser import ConfigParser
 from .extension import Extension
 from .shuffling import shuffle
 from .tokenization import train_tokenizer, tokenize_corpus
+from typing import List
+from .utils import random_filename, random_filenames
 
 
 def _show_extension_details(module_name: str):
@@ -46,6 +49,37 @@ def _show_required_extension_list(config_file: str):
         print(f'{ext[:25]:25s}{version[:10]:10s}')
 
 
+def _balancing_corpora(input_files: List[str], temporary: str):
+    corpus_size = [os.path.getsize(input_file)
+                   for input_file in input_files]
+
+    # Get maximum size and calculate repetition rate.
+    max_size = max(corpus_size)
+    expand_rate = [math.floor(max_size / size) for size in corpus_size]
+
+    print('[*] balance the size for extracted texts.')
+    for input_file, rate in zip(input_files, expand_rate):
+        # Skip if no repetition case.
+        if rate == 1:
+            continue
+
+        # Rename the origin file.
+        print(f'[*] corpus [{input_file.split("/")[-1]}] will be repeated'
+              f' {rate} times.')
+
+        # Repeat the texts and save to the path of origin file.
+        repeat_filename = random_filename(temporary)
+        with open(input_file, 'rb') as src, \
+                open(repeat_filename, 'wb') as dst:
+            for _ in range(rate):
+                src.seek(0)
+                shutil.copyfileobj(src, dst)
+
+        # Remove the origin file.
+        os.remove(input_file)
+        os.rename(repeat_filename, input_file)
+
+
 def _build_corpus(config_file: str):
     # Read config file.
     config = ConfigParser()
@@ -62,11 +96,12 @@ def _build_corpus(config_file: str):
     corpus = config['build'].get('output-corpus', 'corpus.txt')
     raw_corpus = config['build'].get('output-raw-corpus', 'corpus.raw.txt')
 
-    subset_size = config['tokenize'].getint('subset-size', fallback=10000000)
-    vocab_size = config['tokenize'].getint('vocab-size', fallback=8000)
-    unk_token = config['tokenize'].get('unk-token', '<unk>')
+    subset_size = config['tokenization'].getint('subset-size',
+                                                fallback=4000000)
+    vocab_size = config['tokenization'].getint('vocab-size', fallback=8000)
+    unk_token = config['tokenization'].get('unk-token', '<unk>')
 
-    control_tokens = config['tokenize'].get('control-tokens', '')
+    control_tokens = config['tokenization'].get('control-tokens', '')
     control_tokens = [token.strip()
                       for token in control_tokens.splitlines()
                       if token]
@@ -78,16 +113,22 @@ def _build_corpus(config_file: str):
         pass
 
     # Extract raw corpus file to plain sentences.
-    for ext, input_file in input_files:
+    extract_filenames = random_filenames(temporary, len(input_files))
+    for (ext, input_file), name in zip(input_files, extract_filenames):
         print(f'[*] execute extension [{ext}] for [{input_file}]')
         Extension(ext).call(input_file,
-                            os.path.join(temporary, input_file),
+                            name,
                             temporary,
                             dict(config.items(ext)))
 
+    # Balance the size of each corpus.
+    if config['build'].get('balancing', '').lower() == 'true':
+        _balancing_corpora(extract_filenames, temporary)
+
     # Gather the extracted plain text.
     print('[*] merge extracted texts.')
-    with open(os.path.join(temporary, 'integrated'), 'wb') as dst:
+    integrate_filename = random_filename(temporary)
+    with open(integrate_filename, 'wb') as dst:
         for _, input_file in input_files:
             with open(os.path.join(temporary, input_file), 'rb') as src:
                 shutil.copyfileobj(src, dst)
@@ -95,8 +136,8 @@ def _build_corpus(config_file: str):
 
     # Shuffle the text.
     print('[*] start shuffling merged corpus...')
-    shuffle(os.path.join(temporary, 'integrated'), raw_corpus, temporary)
-    os.remove(os.path.join(temporary, 'integrated'))
+    shuffle(integrate_filename, raw_corpus, temporary)
+    os.remove(integrate_filename)
 
     # Train subword tokenizer and tokenize the corpus.
     print('[*] complete preparing corpus. start training tokenizer...')

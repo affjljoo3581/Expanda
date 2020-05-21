@@ -4,6 +4,7 @@ import random
 import shutil
 import argparse
 from typing import List, IO
+from .utils import random_filenames
 
 
 _BEST_SEEK_CNT = 100000
@@ -58,8 +59,8 @@ def shuffle(input_file: str, output_file: str, temporary: str):
 
     # Create temporary bucket files.
     print('[*] create temporary bucket files.')
-    dsts = [open(os.path.join(temporary, f'bucket{i}'), 'wb')
-            for i in range(buckets)]
+    bucket_filenames = random_filenames(temporary, buckets)
+    dsts = [open(name, 'wb') for name in bucket_filenames]
 
     # Get offsets from input file.
     offsets = _list_seek_offsets(src, stride)
@@ -89,14 +90,14 @@ def shuffle(input_file: str, output_file: str, temporary: str):
     # Copy shuffled separations to the output file.
     print('[*] start copying buckets to the output file.')
     with open(output_file, 'wb') as dst:
-        for i in range(buckets):
-            with open(os.path.join(temporary, f'bucket{i}'), 'rb') as src:
+        for name in bucket_filenames:
+            with open(name, 'rb') as src:
                 shutil.copyfileobj(src, dst)
     print('[*] finish copying buckets. remove the buckets...')
 
     # Remove the temporary bucket files.
-    for i in range(buckets):
-        os.remove(os.path.join(temporary, f'bucket{i}'))
+    for name in bucket_filenames:
+        os.remove(name)
 
 
 if __name__ == '__main__':

@@ -6,6 +6,7 @@ import mwparserfromhell as mw
 import xml.etree.cElementTree as etree
 from typing import List, Dict, Any
 from multiprocessing import Process, Queue
+from expanda.utils import random_filenames
 
 
 def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
@@ -111,7 +112,7 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
         for line in src:
             for s in tokenize_sentence(line):
                 if len(s.strip()) < min_len:
-                    continue
+                    break
 
                 dst.write(s.strip() + '\n')
 
@@ -146,10 +147,11 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
     # Start extracting processes.
     workers = []
     queue = Queue(maxsize=10 * args['num-cores'])
+    extract_filenames = random_filenames(temporary, args['num-cores'])
 
     for i in range(args['num-cores']):
         w = Process(target=_process_article_worker,
-                    args=(os.path.join(temporary, f'wiki{i}'), ns, queue))
+                    args=(extract_filenames[i], ns, queue))
         w.daemon = True
         w.start()
 
@@ -186,12 +188,13 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
 
     # Start splitting processes.
     workers = []
+    split_filenames = random_filenames(temporary, args['num-cores'])
     for i in range(args['num-cores']):
         os.makedirs(os.path.join(temporary, f'tmp{i}'))
 
         w = Process(target=_tokenize_sentences_worker,
-                    args=(os.path.join(temporary, f'wiki{i}'),
-                          os.path.join(temporary, f'split{i}'),
+                    args=(extract_filenames[i],
+                          split_filenames[i],
                           os.path.join(temporary, f'tmp{i}'),
                           lang,
                           args['min-length']))
@@ -204,18 +207,18 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
     for w in workers:
         w.join()
     for i in range(args['num-cores']):
-        os.remove(os.path.join(temporary, f'wiki{i}'))
+        os.remove(extract_filenames[i])
         shutil.rmtree(os.path.join(temporary, f'tmp{i}'))
 
     # Merge them into `output_file`.
     with open(output_file, 'wb') as dst:
         for i in range(args['num-cores']):
-            with open(os.path.join(temporary, f'split{i}'), 'rb') as src:
+            with open(split_filenames[i], 'rb') as src:
                 shutil.copyfileobj(src, dst)
 
     # Cleanup temporary files.
-    for i in range(args['num-cores']):
-        os.remove(os.path.join(temporary, f'split{i}'))
+    for name in split_filenames:
+        os.remove(name)
 
 
 __extension__ = {

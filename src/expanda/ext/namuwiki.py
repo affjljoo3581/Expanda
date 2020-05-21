@@ -5,6 +5,7 @@ import ijson
 import shutil
 from typing import Dict, Any
 from multiprocessing import Process, Queue
+from expanda.utils import random_filenames
 
 
 def _create_pattern_dict() -> Dict[str, re.Pattern]:
@@ -74,10 +75,11 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
     # Prepare processes and queue for serving extracted wiki articles.
     workers = []
     queue = Queue(maxsize=10 * args['num-cores'])
+    extract_filenames = random_filenames(temporary, args['num-cores'])
 
     for i in range(args['num-cores']):
         w = Process(target=_process_article_worker,
-                    args=(os.path.join(temporary, f'wiki{i}'), queue))
+                    args=(extract_filenames[i], queue))
         w.daemon = True
         w.start()
         workers.append(w)
@@ -106,10 +108,12 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
 
     # Start tokenization processes.
     workers = []
+    split_filenames = random_filenames(temporary, args['num-cores'])
+
     for i in range(args['num-cores']):
         w = Process(target=_tokenize_sentences_worker,
-                    args=(os.path.join(temporary, f'wiki{i}'),
-                          os.path.join(temporary, f'split{i}'),
+                    args=(extract_filenames[i],
+                          split_filenames[i],
                           args['min-length']))
         w.daemon = True
         w.start()
@@ -119,18 +123,18 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
     # Wait for terminating the processes and remove temporarily created files.
     for w in workers:
         w.join()
-    for i in range(args['num-cores']):
-        os.remove(os.path.join(temporary, f'wiki{i}'))
+    for name in extract_filenames:
+        os.remove(name)
 
     # Merge all tokenized files into `output_file`.
     with open(output_file, 'wb') as dst:
-        for i in range(args['num-cores']):
-            with open(os.path.join(temporary, f'split{i}'), 'rb') as src:
+        for name in split_filenames:
+            with open(name, 'rb') as src:
                 shutil.copyfileobj(src, dst)
 
     # Remove temporary files.
-    for i in range(args['num-cores']):
-        os.remove(os.path.join(temporary, f'split{i}'))
+    for name in split_filenames:
+        os.remove(name)
 
 
 __extension__ = {

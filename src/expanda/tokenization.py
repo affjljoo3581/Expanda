@@ -2,6 +2,7 @@ import os
 import tqdm
 import argparse
 from typing import List
+from .utils import random_filename
 from tokenizers import Tokenizer, models, decoders
 from tokenizers.trainers import WordPieceTrainer
 from tokenizers.normalizers import BertNormalizer
@@ -26,7 +27,7 @@ def train_tokenizer(
         input_file: str,
         vocab_file: str,
         temporary: str,
-        subset_size: int = 10000000,
+        subset_size: int = 4000000,
         vocab_size: int = 8000,
         unk_token: str = '<unk>',
         control_tokens: List[str] = []):
@@ -62,7 +63,7 @@ def train_tokenizer(
     tokenizer.pre_tokenizer = BertPreTokenizer()
 
     # Split the head of input corpus file and save in `temporary` directory.
-    subset_file = os.path.join(temporary, 'subset')
+    subset_file = random_filename(temporary)
     _split_subset_from_file(input_file, subset_file, subset_size)
 
     # Train the model with splitted subset of corpus.
@@ -150,7 +151,7 @@ if __name__ == '__main__':
                               help='output vocabulary file')
     train_parser.add_argument('--tmp', default='tmp',
                               help='temporary directory path')
-    train_parser.add_argument('--subset_size', default=10000000, type=int,
+    train_parser.add_argument('--subset_size', default=4000000, type=int,
                               help='maximum number of lines in subset')
     train_parser.add_argument('--vocab_size', default=8000, type=int,
                               help='number of subwords in vocabulary')
