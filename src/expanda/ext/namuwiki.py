@@ -13,20 +13,9 @@ def _create_pattern_dict() -> Dict[str, re.Pattern]:
             'underline': re.compile(r'__(.*?)__'),
             'bold': re.compile(r'\'\'\'(.*?)\'\'\''),
             'italics': re.compile(r'\'\'(.*?)\'\''),
-            # 'link': re.compile(r'\[\[(?:[^]]*?\|)?(.*?)(?:#.*?)?\]\]'),
-            'modified_link': re.compile(r'\[\[(.*?)\]\]'),
+            'link': re.compile(r'\[\[(?:[^]]*?\|)?(.*?)(?:#.*?)?\]\]'),
             'macro': re.compile(r'\[.*?\]'),
             'others': re.compile(r'^[ >*|].*?', re.M)}
-
-
-def _modified_extracting_link(pattern: re.Pattern, text: str) -> str:
-    cleaned = ''
-    for i, item in enumerate(pattern.split(text)):
-        if i % 2 == 0:
-            cleaned += item
-        else:
-            cleaned += item.split('|')[-1].split('#')[0]
-    return cleaned
 
 
 def _modified_removing_lines_without_punctuation(text: str) -> str:
@@ -58,12 +47,7 @@ def _clean_wiki_text(code: str, patterns: Dict[str, re.Pattern]) -> str:
         code = patterns['italics'].sub(r'\1', code)
 
     # Render links and macros.
-
-    # Instead of using below comment code, using modified function consumes
-    # much faster.
-    # code = patterns['link'].sub(r'\1', code)
-    code = _modified_extracting_link(patterns['modified_link'], code)
-
+    code = patterns['link'].sub(r'\1', code)
     code = patterns['macro'].sub('', code)
 
     # Cleanup the rest messy texts.
@@ -102,17 +86,22 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
             open(output_file, 'w', encoding='utf-8') as dst:
         for line in src:
             for s in kss.split_sentences(line):
-                if len(s.strip()) < min_len:
+                s = s.strip()
+                if len(s) < min_len:
                     continue
 
-                dst.write(s.strip() + '\n')
+                # Skip extraordinary sentences
+                if s[0] in '*<-|':
+                    continue
+
+                dst.write(s + '\n')
 
 
 def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
                             args: Dict[str, Any]):
     # Prepare processes and queue for serving extracted wiki articles.
     workers = []
-    queue = Queue(maxsize=10 * args['num-cores'])
+    queue = Queue(maxsize=50 * args['num-cores'])
     extract_filenames = random_filenames(temporary, args['num-cores'])
 
     for i in range(args['num-cores']):
