@@ -203,7 +203,7 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
 
         workers.append(w)
 
-    # Wait for joining.
+    # Wait for terminating the processes.
     for w in workers:
         w.join()
     for i in range(args['num-cores']):
