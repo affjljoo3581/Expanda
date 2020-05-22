@@ -32,7 +32,7 @@ def train_tokenizer(
         input_file: str,
         vocab_file: str,
         temporary: str,
-        subset_size: int = 536870912,
+        subset_size: int = 512000000,
         vocab_size: int = 8000,
         unk_token: str = '<unk>',
         control_tokens: List[str] = []):
@@ -156,7 +156,7 @@ if __name__ == '__main__':
                               help='output vocabulary file')
     train_parser.add_argument('--tmp', default='tmp',
                               help='temporary directory path')
-    train_parser.add_argument('--subset_size', default=536870912, type=int,
+    train_parser.add_argument('--subset_size', default=512000000, type=int,
                               help='maximum number of lines in subset')
     train_parser.add_argument('--vocab_size', default=8000, type=int,
                               help='number of subwords in vocabulary')

@@ -99,7 +99,7 @@ def _build_corpus(config_file: str):
     raw_corpus = config['build'].get('output-raw-corpus', 'corpus.raw.txt')
 
     subset_size = config['tokenization'].getint('subset-size',
-                                                fallback=4000000)
+                                                fallback=512000000)
     vocab_size = config['tokenization'].getint('vocab-size', fallback=8000)
     unk_token = config['tokenization'].get('unk-token', '<unk>')
 
@@ -123,6 +123,7 @@ def _build_corpus(config_file: str):
                             temporary,
                             dict(config.items(ext)))
 
+    '''
     # Balance the size of each corpus.
     if config['build'].get('balancing', '').lower() == 'true':
         _balancing_corpora(extract_filenames,
@@ -149,6 +150,7 @@ def _build_corpus(config_file: str):
                     unk_token, control_tokens)
     print('[*] create tokenized corpus.')
     tokenize_corpus(raw_corpus, corpus, vocab, unk_token, control_tokens)
+    '''
 
     # Remove temporary directory.
     print('[*] remove temporary directory.')
