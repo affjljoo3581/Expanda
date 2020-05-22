@@ -13,7 +13,7 @@ def _split_subset_from_file(input_file: str, subset_file: str,
                             subset_size: int):
     with open(input_file, 'rb') as src, \
             open(subset_file, 'wb') as dst:
-        for _ in range(subset_size):
+        while True:
             line = src.readline()
 
             # If all sentences are read, stop copying data.
@@ -22,12 +22,17 @@ def _split_subset_from_file(input_file: str, subset_file: str,
 
             dst.write(line)
 
+            # If total amount of copied data is more than `subset_size`, stop
+            # copying data.
+            if src.tell() > subset_size:
+                break
+
 
 def train_tokenizer(
         input_file: str,
         vocab_file: str,
         temporary: str,
-        subset_size: int = 4000000,
+        subset_size: int = 536870912,
         vocab_size: int = 8000,
         unk_token: str = '<unk>',
         control_tokens: List[str] = []):
@@ -151,7 +156,7 @@ if __name__ == '__main__':
                               help='output vocabulary file')
     train_parser.add_argument('--tmp', default='tmp',
                               help='temporary directory path')
-    train_parser.add_argument('--subset_size', default=4000000, type=int,
+    train_parser.add_argument('--subset_size', default=536870912, type=int,
                               help='maximum number of lines in subset')
     train_parser.add_argument('--vocab_size', default=8000, type=int,
                               help='number of subwords in vocabulary')
