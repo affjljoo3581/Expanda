@@ -123,7 +123,6 @@ def _build_corpus(config_file: str):
                             temporary,
                             dict(config.items(ext)))
 
-    '''
     # Balance the size of each corpus.
     if config['build'].get('balancing', '').lower() == 'true':
         _balancing_corpora(extract_filenames,
@@ -150,7 +149,6 @@ def _build_corpus(config_file: str):
                     unk_token, control_tokens)
     print('[*] create tokenized corpus.')
     tokenize_corpus(raw_corpus, corpus, vocab, unk_token, control_tokens)
-    '''
 
     # Remove temporary directory.
     print('[*] remove temporary directory.')
