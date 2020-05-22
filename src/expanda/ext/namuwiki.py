@@ -9,15 +9,26 @@ from expanda.utils import random_filenames
 
 
 def _create_pattern_dict() -> Dict[str, re.Pattern]:
-    return {'without_punct': re.compile(r'.*[^.!?\s]\s*$', re.M),
-            'strokeout': re.compile(r'--.*?--|~~.*?~~'),
+    return {'strokeout': re.compile(r'--.*?--|~~.*?~~'),
             'underline': re.compile(r'__(.*?)__'),
             'bold': re.compile(r'\'\'\'(.*?)\'\'\''),
             'italics': re.compile(r'\'\'(.*?)\'\''),
             'link': re.compile(r'\[\[([^]]*?\|)?(?P<name>.*?)(#.*?)?\]\]'),
             'macro': re.compile(r'\[.*?\]'),
-            'others': re.compile(r'^[ >*|].*?', re.M),
-            'spacing': re.compile(r'\s{2}')}
+            'others': re.compile(r'^[ >*|].*?', re.M)}
+
+
+def _modified_removing_lines_without_punctuation(text):
+    filtered = []
+    for line in text.splitlines():
+        line = line.rstrip()
+        if line and line[-1] in '.!?':
+            filtered.append(line)
+    return '\n'.join(filtered)
+
+
+def _modified_removing_unnecessary_spaces(text):
+    return ' '.join(text.split())
 
 
 def _clean_wiki_text(code: str, patterns: Dict[str, re.Pattern]) -> str:
@@ -37,11 +48,19 @@ def _clean_wiki_text(code: str, patterns: Dict[str, re.Pattern]) -> str:
     code = patterns['macro'].sub('', code)
 
     # Cleanup the rest messy texts.
-    code = patterns['without_punct'].sub('', code)
+
+    # Instead of using below comment code, using modified function consumes
+    # much faster.
+    # code = patterns['without_punct'].sub('', code)
+    code = _modified_removing_lines_without_punctuation(code)
+
     code = patterns['others'].sub('', code)
 
-    while patterns['spacing'].search(code):
-        code = patterns['spacing'].sub(' ', code)
+    # Instead of using below comment code, using modified function consumes
+    # much faster.
+    # while patterns['spacing'].search(code):
+    #     code = patterns['spacing'].sub(' ', code)
+    code = _modified_removing_unnecessary_spaces(code)
 
     return code
 
