@@ -13,12 +13,23 @@ def _create_pattern_dict() -> Dict[str, re.Pattern]:
             'underline': re.compile(r'__(.*?)__'),
             'bold': re.compile(r'\'\'\'(.*?)\'\'\''),
             'italics': re.compile(r'\'\'(.*?)\'\''),
-            'link': re.compile(r'\[\[([^]]*?\|)?(?P<name>.*?)(#.*?)?\]\]'),
+            # 'link': re.compile(r'\[\[(?:[^]]*?\|)?(.*?)(?:#.*?)?\]\]'),
+            'modified_link': re.compile(r'\[\[(.*?)\]\]'),
             'macro': re.compile(r'\[.*?\]'),
             'others': re.compile(r'^[ >*|].*?', re.M)}
 
 
-def _modified_removing_lines_without_punctuation(text):
+def _modified_extracting_link(pattern: re.Pattern, text: str) -> str:
+    cleaned = ''
+    for i, item in enumerate(pattern.split(text)):
+        if i % 2 == 0:
+            cleaned += item
+        else:
+            cleaned += item.split('|')[-1].split('#')[0]
+    return cleaned
+
+
+def _modified_removing_lines_without_punctuation(text: str) -> str:
     filtered = []
     for line in text.splitlines():
         line = line.rstrip()
@@ -27,8 +38,11 @@ def _modified_removing_lines_without_punctuation(text):
     return '\n'.join(filtered)
 
 
-def _modified_removing_unnecessary_spaces(text):
-    return ' '.join(text.split())
+def _modified_removing_unnecessary_spaces(text: str) -> str:
+    replaced = text.replace('\n', ' ').replace('\t', ' ')
+    while '  ' in replaced:
+        replaced = replaced.replace('  ', ' ')
+    return replaced
 
 
 def _clean_wiki_text(code: str, patterns: Dict[str, re.Pattern]) -> str:
@@ -44,7 +58,12 @@ def _clean_wiki_text(code: str, patterns: Dict[str, re.Pattern]) -> str:
         code = patterns['italics'].sub(r'\1', code)
 
     # Render links and macros.
-    code = patterns['link'].sub(r'\g<name>', code)
+
+    # Instead of using below comment code, using modified function consumes
+    # much faster.
+    # code = patterns['link'].sub(r'\1', code)
+    code = _modified_extracting_link(patterns['modified_link'], code)
+
     code = patterns['macro'].sub('', code)
 
     # Cleanup the rest messy texts.
