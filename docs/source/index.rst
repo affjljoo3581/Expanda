@@ -25,6 +25,7 @@ Modules
    expanda.shuffling
    expanda.tokenization
    expanda.extension
+   expanda.utils
 
 .. _`extensions`:
 
