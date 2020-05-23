@@ -100,9 +100,9 @@ def shuffle(input_file: str, output_file: str, temporary: str):
         os.remove(name)
 
 
-if __name__ == '__main__':
+def _main():
     parser = argparse.ArgumentParser(
-        prog='expanda.shuffling',
+        prog='expanda-shuffling',
         description='approximately shuffle text file.')
     parser.add_argument('input')
     parser.add_argument('output')
@@ -122,3 +122,7 @@ if __name__ == '__main__':
     # Remove created temporary directory.
     if remove_after_shuffling:
         os.removedirs(args.tmp)
+
+
+if __name__ == '__main__':
+    _main()

@@ -144,9 +144,9 @@ def tokenize_corpus(
                 dst.write(' '.join(t.tokens) + '\n')
 
 
-if __name__ == '__main__':
+def _main():
     parser = argparse.ArgumentParser(
-        prog='expanda.tokenization',
+        prog='expanda-tokenization',
         description='manage tokenizations')
     subparsers = parser.add_subparsers(dest='command', required=True)
 
@@ -198,3 +198,7 @@ if __name__ == '__main__':
         # Tokenize the input corpus file.
         tokenize_corpus(args.input, args.output, args.vocab, args.unk_token,
                         args.control_tokens)
+
+
+if __name__ == '__main__':
+    _main()
