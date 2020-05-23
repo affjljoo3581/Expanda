@@ -101,6 +101,8 @@ def _build_corpus(config_file: str):
     subset_size = config['tokenization'].getint('subset-size',
                                                 fallback=512000000)
     vocab_size = config['tokenization'].getint('vocab-size', fallback=8000)
+    limit_alphabet = config['tokenization'].getint('limit-alphabet',
+                                                   fallback=1000)
     unk_token = config['tokenization'].get('unk-token', '<unk>')
 
     control_tokens = config['tokenization'].get('control-tokens', '')
@@ -146,7 +148,8 @@ def _build_corpus(config_file: str):
     # Train subword tokenizer and tokenize the corpus.
     print('[*] complete preparing corpus. start training tokenizer...')
     train_tokenizer(raw_corpus, vocab, temporary, subset_size, vocab_size,
-                    unk_token, control_tokens)
+                    limit_alphabet, unk_token, control_tokens)
+
     print('[*] create tokenized corpus.')
     tokenize_corpus(raw_corpus, corpus, vocab, unk_token, control_tokens)
 
