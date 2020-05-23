@@ -34,6 +34,7 @@ def train_tokenizer(
         temporary: str,
         subset_size: int = 512000000,
         vocab_size: int = 8000,
+        limit_alphabet: int = 6000,
         unk_token: str = '<unk>',
         control_tokens: List[str] = []):
     r"""Train **WordPiece** tokenizer and save trained subword vocabulary.
@@ -55,6 +56,7 @@ def train_tokenizer(
             be saved.
         subset_size (int): The maximum number of lines in the subset.
         vocab_size (int): The number of subwords in the vocabulary.
+        limit_alphabet (int): The maximum number of alphabets in vocabulary.
         unk_tokens (str): Unknown token in the vocabulary.
         control_tokens (list): Control tokens in the vocabulary.
 
@@ -75,7 +77,7 @@ def train_tokenizer(
     trainer = WordPieceTrainer(vocab_size=vocab_size,
                                min_frequency=2,
                                show_progress=True,
-                               limit_alphabet=1000,
+                               limit_alphabet=limit_alphabet,
                                special_tokens=[unk_token] + control_tokens,
                                continuing_subword_prefix='##')
     tokenizer.train(trainer, [subset_file])
@@ -131,7 +133,7 @@ def tokenize_corpus(
             buffer.append(line)
 
             # Tokenize buffered sentences and write to `output_file`.
-            if len(buffer) > 64:
+            if len(buffer) > 10000:
                 for t in tokenizer.encode_batch(buffer):
                     dst.write(' '.join(t.tokens) + '\n')
                 buffer.clear()
