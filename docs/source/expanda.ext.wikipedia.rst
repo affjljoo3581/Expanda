@@ -4,15 +4,15 @@ expanda.ext.wikipedia
 Introduction
 ------------
 **Wikipedia** ([#]_) is one of the most famous datasets in NLP. It has enormous
-scale of text and contains diverse categories. Also, there are multi-lingual
-versions of Wikipedia. It is frequently used to pretrain NLP models (especially
-language model).
+scale of text and contains diverse categories. Also, Wikipedia has
+multi-lingual versions of articles. It is frequently used to pretrain NLP
+models (especially language model).
 
 Data structure of Wikipedia is based on *MediaWiki* ([#]_) which is a free and
 open-source wiki engine. All Wikipedia contents are written in *MediaWiki*
 grammar. There are many nested structures and messy components in raw contents.
-Thanks to `mwparserfromhell` ([#]_), MediaWiki-formatted contents would be
-parsed and each component would be altered to plain texts.
+Thanks to mwparserfromhell_, MediaWiki-formatted contents would be parsed and
+each component would be altered to plain texts.
 
 Simply, this extension extracts plain texts from Wikipedia dump file. It
 supports multi-core processing to enhance extracting speed. Too short sentences
@@ -53,4 +53,4 @@ References
 ----------
 .. [#] https://en.wikipedia.org/wiki/Wikipedia
 .. [#] https://en.wikipedia.org/wiki/MediaWiki
-.. [#] https://github.com/earwig/mwparserfromhell
+.. _mwparserfromhell: https://github.com/earwig/mwparserfromhell

@@ -7,8 +7,9 @@ Introduction
 Common shuffling algorithms ensure almost perfect randomness and are efficient
 (usually have :math:`O(n)` complexity). However, they consume a lot of memories
 while shuffling large files. For instance, using shuf_ to shuffle 5GB of file
-may occur memory error. In most cases, the whole data would be copied to the
-memory. Besides, some algorithms require several times more than the memory.
+may occur memory error in small system. In most cases, the whole data would be
+copied to the memory. Besides, some algorithms require several times more than
+the memory.
 
 Let's consider the case of solving NLP problems in deep learning. Because a
 larger corpus leads better performance, many texts should be gathered into the
@@ -75,7 +76,7 @@ Command-line Usage
 
 .. code-block:: console
 
-    usage: expanda.shuffling [-h] [--tmp TMP] input output
+    usage: expanda-shuffling [-h] [--tmp TMP] input output
 
     approximately shuffle text file.
 
