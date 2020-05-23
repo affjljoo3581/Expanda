@@ -63,6 +63,12 @@ procedures are applied to the corpora.
 Expanda provides some useful extensions in ``expanda.ext`` package. See also
 :ref:`extensions`.
 
+.. note::
+    While extracting corpus, `temporary files` might be needed. Expanda
+    recommends to use :ref:`utils for extension` when creating
+    `temporary files`. All extensions Expanda provides create files with
+    ``random_filename`` and ``random_filenames``.
+
 Classes
 -------
 .. autoclass:: Extension
