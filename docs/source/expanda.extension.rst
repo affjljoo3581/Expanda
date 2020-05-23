@@ -6,10 +6,10 @@ Introduction
 ------------
 Corpora, which are crawled or downloaded from Internet, have diverse
 structures and formats. That is because **the purpose of each content is
-different**. For instance, *Wikipedia* is a collection of articles and *Twitter*
-consists of tweets. Futhermore, **structures are even changed by platforms of
-corpus contents**. Same wiki contents can have different structures depending
-on their wiki engines.
+different**. For instance, *Wikipedia* is a collection of articles and
+*Twitter* consists of tweets. Futhermore, **structures are even changed by
+platforms of corpus contents**. Same wiki contents can have different
+structures depending on their wiki engines.
 
 The very purpose of *expanda* is to integrate procedures and pipelines for
 building corpus dataset. In order to consolidate the process with various
