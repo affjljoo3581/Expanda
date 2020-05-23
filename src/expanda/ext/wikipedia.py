@@ -9,6 +9,13 @@ from multiprocessing import Process, Queue
 from expanda.utils import random_filenames
 
 
+def _modified_removing_unnecessary_spaces(text: str) -> str:
+    replaced = text.replace('\n', ' ').replace('\t', ' ')
+    while '  ' in replaced:
+        replaced = replaced.replace('  ', ' ')
+    return replaced
+
+
 def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
     # Parse wiki code by using `mwparserfromhell` and create namespace-based
     # wiki-link pattern.the
@@ -57,7 +64,6 @@ def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
     # Post-process cleaned wiki article content through simple sentence
     # testing.
     regex_brackets = re.compile(r'\([^(]*?\)')
-    regex_spacing = re.compile(r'\s+', re.M)
 
     filtered = []
     for text in section_text:
@@ -69,7 +75,7 @@ def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
             # Remove nested brackets and unnecessary spaces.
             while regex_brackets.search(line):
                 line = regex_brackets.sub('', line)
-            line = regex_spacing.sub(' ', line)
+            line = _modified_removing_unnecessary_spaces(line)
 
             # Add post-processed text.
             filtered.append(line)
@@ -112,7 +118,7 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
         for line in src:
             for s in tokenize_sentence(line):
                 if len(s.strip()) < min_len:
-                    break
+                    continue
 
                 dst.write(s.strip() + '\n')
 
