@@ -160,7 +160,7 @@ def _build_corpus(config_file: str):
     print('[*] finish building corpus.')
 
 
-if __name__ == '__main__':
+def _main():
     parser = argparse.ArgumentParser(
         prog='expanda',
         description='Expanda - A universal integrated corpus generator')
@@ -193,3 +193,7 @@ if __name__ == '__main__':
         _show_extension_details(args.extension)
     elif args.command == 'build':
         _build_corpus(args.config)
+
+
+if __name__ == '__main__':
+    _main()
