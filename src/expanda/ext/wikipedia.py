@@ -44,11 +44,8 @@ def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
 
     section_text = []
     for section in wiki.get_sections(flat=True,
-                                     include_lead=True,
-                                     include_headings=True):
+                                     include_lead=True):
         # Remove elements filtered by above functions.
-        for obj in section.ifilter_headings(recursive=True):
-            remove_element(section, obj)
         for obj in section.ifilter_wikilinks(matches=filter_wikilinks,
                                              recursive=True):
             remove_element(section, obj)
@@ -152,7 +149,7 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
 
     # Start extracting processes.
     workers = []
-    queue = Queue(maxsize=10 * args['num-cores'])
+    queue = Queue(maxsize=50 * args['num-cores'])
     extract_filenames = random_filenames(temporary, args['num-cores'])
 
     for i in range(args['num-cores']):
