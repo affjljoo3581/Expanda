@@ -15,6 +15,7 @@ def _create_pattern_dict() -> Dict[str, re.Pattern]:
             'italics': re.compile(r'\'\'(.*?)\'\''),
             'link': re.compile(r'\[\[(?:[^]]*?\|)?(.*?)(?:#.*?)?\]\]'),
             'macro': re.compile(r'\[.*?\]'),
+            'bracket': re.compile(r'\([^(]*?\)'),
             'others': re.compile(r'^[ >*|].*?', re.M)}
 
 
@@ -64,6 +65,10 @@ def _clean_wiki_text(code: str, patterns: Dict[str, re.Pattern]) -> str:
     # while patterns['spacing'].search(code):
     #     code = patterns['spacing'].sub(' ', code)
     code = _modified_removing_unnecessary_spaces(code)
+
+    # Last, remove unnecessary brackets.
+    while patterns['bracket'].search(code):
+        code = patterns['bracket'].sub('', code)
 
     return code
 
