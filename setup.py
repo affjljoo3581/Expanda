@@ -12,9 +12,10 @@ setup(
     long_description=open('README.md', 'r', encoding='utf-8').read(),
     long_description_content_type='text/markdown',
 
+    keywords=['expanda', 'corpus', 'dataset', 'nlp'],
     url='https://github.com/affjljoo3581/Expanda',
 
-    keywords=['expanda', 'corpus', 'dataset', 'nlp'],
+    package_dir={"": "src"},
     packages=find_packages('src'),
     python_requires='>=3.6.0',
     install_requires=[
