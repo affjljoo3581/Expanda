@@ -1,3 +1,5 @@
+.. _`tokenization`:
+
 expanda.tokenization
 ====================
 .. currentmodule:: expanda.tokenization
