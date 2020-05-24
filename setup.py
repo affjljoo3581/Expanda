@@ -1,5 +1,7 @@
-from setuptools import setup, find_packages
+from setuptools import dist, setup, find_packages
 
+# `Cython` is used when installing `kss` library.
+dist.Distribution().fetch_build_eggs(['Cython'])
 
 setup(
     name='Expanda',
