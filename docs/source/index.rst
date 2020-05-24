@@ -43,7 +43,7 @@ You can install from source by cloning the repository and running:
 
 .. code:: console
 
-   $ git clone https://github.com/affjljoo3581/Expanda
+   $ git clone https://github.com/affjljoo3581/Expanda.git
    $ cd Expanda
    $ python setup.py install
 
