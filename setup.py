@@ -16,6 +16,7 @@ setup(
 
     keywords=['expanda', 'corpus', 'dataset', 'nlp'],
     url='https://github.com/affjljoo3581/Expanda',
+    license='Apache-2.0',
 
     package_dir={"": "src"},
     packages=find_packages('src'),
