@@ -36,7 +36,7 @@ def _show_required_extension_list(config_file: str):
     config.read(config_file)
 
     # Parse `input-files` option to get required extension list.
-    input_files = config['DEFAULT'].get('input-files')
+    input_files = config['build'].get('input-files', fallback='')
     exts = set(re.match(r'--(.*?)\s', line).group(0)
                for line in input_files.splitlines(False)
                if line)
