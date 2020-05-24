@@ -17,8 +17,8 @@ once by setting build configuration.
 
 Dependencies
 ------------
-* nltk==3.5
-* ijson==3.0.4
+* nltk
+* ijson
 * tqdm==4.46.0
 * mwparserfromhell==0.5.4
 * tokenizers==0.7.0
