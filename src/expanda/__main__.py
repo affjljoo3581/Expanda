@@ -110,11 +110,17 @@ def _build_corpus(config_file: str):
                       for token in control_tokens.splitlines()
                       if token]
 
-    # Create temporary directory if not exists.
-    try:
-        os.makedirs(temporary)
-    except FileExistsError:
-        pass
+    # Create directories if not exists.
+    def create_dir(path):
+        try:
+            os.makedirs(path)
+        except FileExistsError:
+            pass
+
+    create_dir(os.path.dirname(vocab))
+    create_dir(os.path.dirname(corpus))
+    create_dir(os.path.dirname(raw_corpus))
+    create_dir(temporary)
 
     # Extract raw corpus file to plain sentences.
     extract_filenames = random_filenames(temporary, len(input_files))
