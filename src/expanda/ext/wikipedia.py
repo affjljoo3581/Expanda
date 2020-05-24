@@ -121,7 +121,7 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
 
 
 def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
-                         args: Dict[str, Any]):  # pragma: no cover
+                         args: Dict[str, Any]):
     # Open wikipedia dump file.
     file = bz2.open(input_file, 'r')
     context = etree.iterparse(file, events=('start', 'end'))
