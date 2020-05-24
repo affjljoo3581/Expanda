@@ -1,3 +1,5 @@
+.. _`expanda.extension`:
+
 expanda.extension
 =================
 .. currentmodule:: expanda.extension
