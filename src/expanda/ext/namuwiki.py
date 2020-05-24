@@ -3,12 +3,12 @@ import re
 import kss
 import ijson
 import shutil
-from typing import Dict, Any
+from typing import Dict, Any, Pattern
 from multiprocessing import Process, Queue
 from expanda.utils import random_filenames
 
 
-def _create_pattern_dict() -> Dict[str, re.Pattern]:
+def _create_pattern_dict() -> Dict[str, Pattern[str]]:
     return {'strokeout': re.compile(r'--.*?--|~~.*?~~'),
             'underline': re.compile(r'__(.*?)__'),
             'bold': re.compile(r'\'\'\'(.*?)\'\'\''),
@@ -35,7 +35,7 @@ def _modified_removing_unnecessary_spaces(text: str) -> str:
     return replaced
 
 
-def _clean_wiki_text(code: str, patterns: Dict[str, re.Pattern]) -> str:
+def _clean_wiki_text(code: str, patterns: Dict[str, Pattern[str]]) -> str:
     # Remove strokeouts and clear underlines.
     code = patterns['strokeout'].sub('', code)
     code = patterns['underline'].sub(r'\1', code)
