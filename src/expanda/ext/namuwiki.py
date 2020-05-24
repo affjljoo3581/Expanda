@@ -103,7 +103,7 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
 
 
 def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
-                            args: Dict[str, Any]):
+                            args: Dict[str, Any]):  # pragma: no cover
     # Prepare processes and queue for serving extracted wiki articles.
     workers = []
     queue = Queue(maxsize=50 * args['num-cores'])
