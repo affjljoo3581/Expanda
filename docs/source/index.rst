@@ -22,7 +22,7 @@ Dependencies
 * tqdm==4.46.0
 * mwparserfromhell==0.5.4
 * tokenizers==0.7.0
-* kss==1.6.5
+* kss==1.3.1
 
 Installation
 ------------
