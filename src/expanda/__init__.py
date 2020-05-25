@@ -94,12 +94,13 @@ def _build_corpus(config_file: str):
 
     # Read arguments from configuration file.
     temporary = config['build'].get('temporary-path', './tmp')
-    vocab = config['build'].get('output-vocab', 'vocab.txt')
-    corpus = config['build'].get('output-corpus', 'corpus.txt')
-    raw_corpus = config['build'].get('output-raw-corpus', 'corpus.raw.txt')
+    vocab = config['build'].get('output-vocab', 'build/vocab.txt')
+    corpus = config['build'].get('output-corpus', 'build/corpus.txt')
+    raw_corpus = config['build'].get('output-raw-corpus',
+                                     'build/corpus.raw.txt')
 
     subset_size = config['tokenization'].getint('subset-size',
-                                                fallback=512000000)
+                                                fallback=1000000000)
     vocab_size = config['tokenization'].getint('vocab-size', fallback=8000)
     limit_alphabet = config['tokenization'].getint('limit-alphabet',
                                                    fallback=1000)
