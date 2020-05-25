@@ -21,7 +21,14 @@ setup(
     package_dir={"": "src"},
     packages=find_packages('src'),
     python_requires='>=3.6.0',
-    install_requires=open('requirements.txt', 'r').readlines(),
+    install_requires=[
+        'nltk',
+        'ijson',
+        'tqdm>=4.46.0',
+        'mwparserfromhell>=0.5.4',
+        'tokenizers>=0.7.0',
+        'kss==1.3.1'
+    ],
 
     entry_points={
         'console_scripts': [
