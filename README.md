@@ -63,13 +63,69 @@ $ cd workspace
 ```
 Then, download wikipedia dump file from [here](https://dumps.wikimedia.org/).
 In this example, we are going to test with [part of enwiki](https://dumps.wikimedia.org/enwiki/20200520/enwiki-20200520-pages-articles1.xml-p1p30303.bz2).
-Download through web browser and move to the workspace directory or, run below
-code:
+Download the file through web browser, move to `workspace/src` and rename to
+`wiki.xml.bz2`. Instead, run below code:
 ```console
-$ wget https://dumps.wikimedia.org/enwiki/20200520/enwiki-20200520-pages-articles1.xml-p1p30303.bz2
+$ mkdir src
+$ wget -O src/wiki.xml.bz2 https://dumps.wikimedia.org/enwiki/20200520/enwiki-20200520-pages-articles1.xml-p1p30303.bz2
 ```
-For using Expanda, we need to setup the configuration file. Create
-``expanda.cfg`` file and write the below:
+After downloading the dump file, we need to setup the configuration file.
+Create ``expanda.cfg`` file and write the below:
 ```ini
+[expanda.ext.wikipedia]
+num-cores           = 6
 
+[tokenization]
+unk-token           = <unk>
+control-tokens      = <s>
+                      </s>
+                      <pad>
+
+[build]
+input-files         =
+    --expanda.ext.wikipedia     src/wiki.xml.bz2
+```
+Current directory structure of `workspace` should be as follows:
+```
+workspace
+├── src
+│   └── wiki.xml.bz2
+└── expanda.cfg
+```
+Now we are ready to build! Run Expanda by using:
+```console
+$ expanda build
+```
+Then we can get the below output:
+```
+[*] execute extension [expanda.ext.wikipedia] for [src/wiki.xml.bz2]
+[*] merge extracted texts.
+[*] start shuffling merged corpus...
+[*] optimum stride: 17, buckets: 34
+[*] create temporary bucket files.
+[*] successfully shuffle offsets. total offsets: 102936
+[*] shuffle input file: 100%|████████████████████| 102936/102936 [00:02<00:00, 34652.03it/s]
+[*] start copying buckets to the output file.
+[*] finish copying buckets. remove the buckets...
+[*] complete preparing corpus. start training tokenizer...
+[00:00:59] Reading files                            ████████████████████                 100
+[00:00:04] Tokenize words                           ████████████████████ 405802   /   405802
+[00:00:00] Count pairs                              ████████████████████ 405802   /   405802
+[00:00:01] Compute merges                           ████████████████████ 6332     /     6332
+
+[*] create tokenized corpus.
+[*] tokenize corpus: 100%|█████████████████████| 1749902/1749902 [00:28<00:00, 61958.55it/s]
+[*] remove temporary directory.
+[*] finish building corpus.
+```
+If you build dataset successfully, you can get the following directory tree:
+```
+workspace
+├── build
+│   ├── corpus.raw.txt
+│   ├── corpus.txt
+│   └── vocab.txt
+├── src
+│   └── wiki.xml.bz2
+└── expanda.cfg
 ```
