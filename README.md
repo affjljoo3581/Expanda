@@ -1,6 +1,6 @@
 # Expanda
 
-**The integrated corpus-building environment.**
+**The universial integrated corpus-building environment.**
 
 ![Python package](https://github.com/affjljoo3581/Expanda/workflows/Python%20package/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/expanda/badge/?version=latest)](https://expanda.readthedocs.io/en/latest/?badge=latest)
