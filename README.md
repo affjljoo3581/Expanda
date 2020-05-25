@@ -2,6 +2,7 @@
 
 **The universial integrated corpus-building environment.**
 
+[![PyPI version](https://badge.fury.io/py/Expanda.svg)](https://badge.fury.io/py/Expanda)
 ![build](https://github.com/affjljoo3581/Expanda/workflows/build/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/expanda/badge/?version=latest)](https://expanda.readthedocs.io/en/latest/?badge=latest)
 ![GitHub](https://img.shields.io/github/license/affjljoo3581/Expanda)
