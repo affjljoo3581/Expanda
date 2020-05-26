@@ -124,7 +124,8 @@ If you build dataset successfully, you can get the following directory tree:
 workspace
 ├── build
 │   ├── corpus.raw.txt
-│   ├── corpus.txt
+│   ├── corpus.train.txt
+│   ├── corpus.test.txt
 │   └── vocab.txt
 ├── src
 │   └── wiki.xml.bz2
