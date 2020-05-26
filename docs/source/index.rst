@@ -128,11 +128,13 @@ first. The configuration file follows **INI format**. Here is an example:
        --my.extension.foo2    src/bar2.txt
        --my.extension.foo3    src/bar3.xml.bz2
    balancing           = true
+   split-ratio         = 0.1
 
    temporary-path      = tmp
 
    output-vocab        = build/vocab.txt
-   output-corpus       = build/corpus.txt
+   output-train-corpus = build/corpus.train.txt
+   output-test-corpus  = build/corpus.test.txt
    output-raw-corpus   = build/corpus.raw.txt
 
 Basically, you need to configure two sections -- **tokenization** and
@@ -153,7 +155,8 @@ After building the dataset, the workspace should be as below:
    workspace
    ├── build
    │     ├── corpus.raw.txt
-   │     ├── corpus.txt
+   │     ├── corpus.train.txt
+   │     ├── corpus.test.txt
    │     └── vocab.txt
    ├── src
    │     ├── bar1.xml
