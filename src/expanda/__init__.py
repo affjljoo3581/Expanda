@@ -95,7 +95,12 @@ def _build_corpus(config_file: str):
     # Read arguments from configuration file.
     temporary = config['build'].get('temporary-path', './tmp')
     vocab = config['build'].get('output-vocab', 'build/vocab.txt')
-    corpus = config['build'].get('output-corpus', 'build/corpus.txt')
+    split_ratio = config['build'].getfloat('split-ratio', 0.1)
+
+    train_corpus = config['build'].get('output-train-corpus',
+                                       'build/corpus.train.txt')
+    test_corpus = config['build'].get('output-test-corpus',
+                                      'build/corpus.test.txt')
     raw_corpus = config['build'].get('output-raw-corpus',
                                      'build/corpus.raw.txt')
 
@@ -119,7 +124,8 @@ def _build_corpus(config_file: str):
             pass
 
     create_dir(os.path.dirname(vocab))
-    create_dir(os.path.dirname(corpus))
+    create_dir(os.path.dirname(train_corpus))
+    create_dir(os.path.dirname(test_corpus))
     create_dir(os.path.dirname(raw_corpus))
     create_dir(temporary)
 
@@ -158,7 +164,29 @@ def _build_corpus(config_file: str):
                     limit_alphabet, unk_token, control_tokens)
 
     print('[*] create tokenized corpus.')
-    tokenize_corpus(raw_corpus, corpus, vocab, unk_token, control_tokens)
+    tokenize_filename = random_filename(temporary)
+    tokenize_corpus(raw_corpus, tokenize_filename, vocab, unk_token,
+                    control_tokens)
+
+    print('[*] split the corpus into train and test dataset.')
+    with open(tokenize_filename, 'rb') as src:
+        total_lines = 0
+        for _ in src:
+            total_lines += 1
+
+        src.seek(0)
+
+        # Write to test dataset.
+        with open(test_corpus, 'wb') as dst:
+            for i, line in enumerate(src):
+                dst.write(line)
+                if i >= total_lines * split_ratio:
+                    break
+
+        # Write to train dataset.
+        with open(train_corpus, 'wb') as dst:
+            shutil.copyfileobj(src, dst)
+    os.remove(tokenize_filename)
 
     # Remove temporary directory.
     print('[*] remove temporary directory.')
