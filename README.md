@@ -116,6 +116,7 @@ Then we can get the below output:
 
 [*] create tokenized corpus.
 [*] tokenize corpus: 100%|█████████████████████| 1749902/1749902 [00:28<00:00, 61958.55it/s]
+[*] split the corpus into train and test dataset.
 [*] remove temporary directory.
 [*] finish building corpus.
 ```
