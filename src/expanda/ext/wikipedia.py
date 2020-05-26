@@ -97,11 +97,10 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
         import nltk
 
         # Download nltk resources into `temporary` directory.
-        os.environ['NLTK_DATA'] = temporary
         try:
-            nltk.data.find('tokenizers/punkt')
+            nltk.data.find('tokenizers/punkt', paths=temporary)
         except LookupError:
-            nltk.download('punkt')
+            nltk.download('punkt', download_dir=temporary)
 
         tokenize_sentence = nltk.tokenize.sent_tokenize
     elif lang == 'ko':
