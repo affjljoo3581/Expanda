@@ -25,6 +25,7 @@ def test_splitting_sentences():
         fp.write(dummy)
 
     # Split the sentences.
+    wikipedia._prepare_tokenizing_sentences('en')
     wikipedia._tokenize_sentences_worker(input_file, output_file, 'en', 0)
 
     # Check if sentences are splitted well.
