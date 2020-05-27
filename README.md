@@ -100,6 +100,8 @@ $ expanda build
 Then we can get the below output:
 ```
 [*] execute extension [expanda.ext.wikipedia] for [src/wiki.xml.bz2]
+[nltk_data] Downloading package punkt to /home/user/nltk_data...
+[nltk_data]   Unzipping tokenizers/punkt.zip.
 [*] merge extracted texts.
 [*] start shuffling merged corpus...
 [*] optimum stride: 17, buckets: 34
