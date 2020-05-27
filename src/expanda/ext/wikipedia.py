@@ -91,12 +91,22 @@ def _process_article_worker(output_file: str, ns: List[str], queue: Queue):
             fp.write(_clean_wiki_text(code, ns) + '\n')
 
 
-def _tokenize_sentences_worker(input_file: str, output_file: str,
-                               temporary: str, lang: str, min_len: int):
+def _prepare_tokenizing_sentences(lang: str):
     if lang == 'en':
         import nltk
-        nltk.download('punkt', download_dir=temporary)
-        nltk.data.path.append(temporary)
+
+        # Download `punkt` resource.
+        try:
+            nltk.data.find('tokenizers/punkt')
+        except LookupError:
+            nltk.download('punkt')
+
+
+def _tokenize_sentences_worker(input_file: str, output_file: str,
+                               lang: str, min_len: int):
+    if lang == 'en':
+        import nltk
+        nltk.data.find('tokenizers/punkt')
 
         tokenize_sentence = nltk.tokenize.sent_tokenize
     elif lang == 'ko':
@@ -185,15 +195,14 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
         w.join()
 
     # Start splitting processes.
+    _prepare_tokenizing_sentences(lang)
+
     workers = []
     split_filenames = random_filenames(temporary, args['num-cores'])
     for i in range(args['num-cores']):
-        os.makedirs(os.path.join(temporary, f'tmp{i}'))
-
         w = Process(target=_tokenize_sentences_worker,
                     args=(extract_filenames[i],
                           split_filenames[i],
-                          os.path.join(temporary, f'tmp{i}'),
                           lang,
                           args['min-length']))
         w.daemon = True
@@ -206,7 +215,6 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
         w.join()
     for i in range(args['num-cores']):
         os.remove(extract_filenames[i])
-        shutil.rmtree(os.path.join(temporary, f'tmp{i}'))
 
     # Merge them into `output_file`.
     with open(output_file, 'wb') as dst:
