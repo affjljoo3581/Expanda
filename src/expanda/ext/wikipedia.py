@@ -96,6 +96,7 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
     if lang == 'en':
         import nltk
         nltk.download('punkt', download_dir=temporary)
+        nltk.data.path.append(temporary)
 
         tokenize_sentence = nltk.tokenize.sent_tokenize
     elif lang == 'ko':
