@@ -16,7 +16,9 @@ def _create_pattern_dict() -> Dict[str, Pattern[str]]:
             'link': re.compile(r'\[\[(?:[^]]*?\|)?(.*?)(?:#.*?)?\]\]'),
             'macro': re.compile(r'\[.*?\]'),
             'bracket': re.compile(r'\([^(]*?\)'),
-            'others': re.compile(r'^[ >*|].*?', re.M)}
+            'others': re.compile(r'^[ >*|].*?', re.M),
+            'single-quote': re.compile('[\x60\xb4\u2018\u2019]'),
+            'double-quote': re.compile('[\u201c\u201d]')}
 
 
 def _modified_removing_lines_without_punctuation(text: str) -> str:
@@ -66,9 +68,13 @@ def _clean_wiki_text(code: str, patterns: Dict[str, Pattern[str]]) -> str:
     #     code = patterns['spacing'].sub(' ', code)
     code = _modified_removing_unnecessary_spaces(code)
 
-    # Last, remove unnecessary brackets.
+    # Remove unnecessary brackets.
     while patterns['bracket'].search(code):
         code = patterns['bracket'].sub('', code)
+
+    # Replace unusual quotes.
+    code = patterns['single-quote'].sub('\'', code)
+    code = patterns['double-quote'].sub('"', code)
 
     return code
 

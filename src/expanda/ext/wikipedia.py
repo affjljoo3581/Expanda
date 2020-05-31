@@ -61,6 +61,8 @@ def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
     # Post-process cleaned wiki article content through simple sentence
     # testing.
     regex_brackets = re.compile(r'\([^(]*?\)')
+    regex_double_quotes = re.compile('[\u201c\u201d]')
+    regex_single_quotes = re.compile('[\x60\xb4\u2018\u2019]')
 
     filtered = []
     for text in section_text:
@@ -73,6 +75,10 @@ def _clean_wiki_text(code: str, ns: List[str] = []) -> str:
             while regex_brackets.search(line):
                 line = regex_brackets.sub('', line)
             line = _modified_removing_unnecessary_spaces(line)
+
+            # Replace unusual quotes.
+            line = regex_double_quotes.sub('"', line)
+            line = regex_single_quotes.sub('\'', line)
 
             # Add post-processed text.
             filtered.append(line)
