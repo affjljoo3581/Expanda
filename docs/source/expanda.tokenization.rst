@@ -7,10 +7,10 @@ expanda.tokenization
 Introduction
 ~~~~~~~~~~~~
 Traditionally, it was believed that words -- units of language -- cannot be
-splitted in machine learning. Sometimes words are decomposed into characters in
-some cases, but major models use word-level approches. Of course, the approches
-worked well. Even today, there is no problem to solve simple natural language
-tasks through word-level based models.
+split in machine learning. Sometimes words are decomposed into characters in
+some cases, but major models use word-level approaches. Of course, the
+approaches worked well. Even today, there is no problem to solve simple natural
+language tasks through word-level based models.
 
 However, in deep learning, the number of words in corpus is immensely
 increased. Compared to traditional machine learning, deep learning treats
@@ -24,18 +24,18 @@ simplest and well-known method is `One-Hot Encoding`. It deals word as a basis
 vector. For instance, the words are mapped as follows:
 :math:`\text{apple} = (1, 0, 0)`, :math:`\text{banana} = (0, 1, 0)` and
 :math:`\text{orange} = (0, 0, 1)`. It is intuitive and easy to implement. It
-does not even require any pretrainings. Each vector, however, does not contain
-contextual semantics of corresponding word. Moreover, because the vectors are
-independent to each other, the size of vectors follows :math:`O(n^2)`.
+does not even require any pretrainings Each vector, however, does not contain
+contextual semantics of the corresponding word. Moreover, because the vectors
+are independent of each other, the size of vectors follows :math:`O(n^2)`.
 
-So alternative method has been recommended. Since the dimensionality of each
-vector was matter, the method suggests to use **fixed dimensional vectors** in
-embedding. The vectors are randomly initialized at first, and then trained with
-other parameters. Fixed dimensionality reduces the space complexity to
+So an alternative method has been recommended. Since the dimensionality of each
+vector was the matter, the method suggests using **fixed dimensional vectors**
+in embedding. The vectors are randomly initialized at first and then trained
+with other parameters. Fixed dimensionality reduces the space complexity to
 :math:`O(n)`.
 
-In fact, fixed embedding is theoretically same as `One-Hot Encoding` in usual
-cases. In terms of linear algebra, it holds that
+In fact, fixed embedding is theoretically the same as `One-Hot Encoding` in
+usual cases. In terms of linear algebra, it holds that
 
 .. math::
     \newcommand{\M}{\mathcal{M}}
@@ -48,24 +48,24 @@ where :math:`\M` is a neural network with feed-forward layer
 and :math:`\x_i \in \{0, 1\}^V` is a standard basis vector of which elements
 are all zero, except :math:`i`\th index that equals 1. :math:`V` and :math:`D`
 imply vocabulary size and dimensionality of the model respectively. We can
-interpret :math:`\e_i` as a fixed dimensional embedding vector of
-:math:`i`\th word in vocabulary.
+interpret :math:`\e_i` as a fixed dimensional embedding vector of :math:`i`\th
+word in vocabulary.
 
 Yet, it is insufficient for extremly large corpus. The large corpus has
 numerous words and the embedding vectors still possess almost of memory. The
-last way to decrease memory is decreasing vocabulary size. Similar to the case
+last way to decrease memory is to decrease vocabulary size. Similar to the case
 of embedding, we can consider **fixing the number of words**. If words can be
-splitted into sub-words such as morphemes, so the similar parts of the words
-would be reused, then the vocabulary size would be reduced effectively by
+split into sub-words such as morphemes, so the similar parts of the words would
+be reused, then the vocabulary size would be reduced effectively by
 constructing vocabulary with those subwords.
 
 Then, how can we tokenize words into their subwords? Actually, subword
-tokenization is quite fikle, ambiguous and arbitrary. There are many approaches
-to split words into their subwords. BPE (Byte-Pair Encoding) ([#]_), Unigram LM
-([#]_) and WordPiece Model ([#]_) are representative. They are all used in
-subword tokenization and preform well. Although there is a little difference in
-performance between them, it does not affect to the overall peformance of
-model.
+tokenization is quite fickle, ambiguous and arbitrary. There are many
+approaches to split words into their subwords. BPE (Byte-Pair Encoding) ([#]_),
+Unigram LM ([#]_) and WordPiece Model ([#]_) are representatives. They are all
+used in subword tokenization and perform well. Although there is a little
+difference in performance between them, it does not affect the overall
+performance of model.
 
 In this module, we use *WordPiece Model* which is implemented in
 `HuggingFace Tokenizers`_. Thanks to *tokenizers*, this module provides

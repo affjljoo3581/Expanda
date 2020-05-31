@@ -5,8 +5,8 @@ from typing import Dict
 class Extension(object):
     r"""Wrapper class of extension.
 
-    Every extensions should define their informations into ``__extension__``
-    variable. For using extensions, this wrapper class provides simple
+    Every extension should define their information into ``__extension__``
+    variable. For using extensions, this wrapper class provides a simple
     interface to handle them. It summarizes attributes and helps executing
     them.
 
@@ -48,8 +48,8 @@ class Extension(object):
         r"""Call main code of the extension.
 
         Note:
-            Every extensions have their own parameter requirements in
-            ``__extension__`` variable. This function automatically cast
+            Extensions have their own parameter requirements in
+            ``__extension__`` variable. This function automatically casts
             the type of each string-formatted raw argument.
 
         Arguments:

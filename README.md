@@ -1,6 +1,6 @@
 # Expanda
 
-**The universial integrated corpus-building environment.**
+**The universal integrated corpus-building environment.**
 
 [![PyPI version](https://badge.fury.io/py/Expanda.svg)](https://badge.fury.io/py/Expanda)
 ![build](https://github.com/affjljoo3581/Expanda/workflows/build/badge.svg)
@@ -11,8 +11,8 @@
 
 ## Introduction
 **Expanda** is an **integrated corpus-building environment**. Expanda provides
-integrated pipelines for building corpus dataset. Building corpus dataset
-requires several complicated pipelines such as parsing, shuffling and
+integrated pipelines for building a corpus dataset. Building corpus dataset
+requires several complicated pipelines such as parsing, shuffling, and
 tokenization. If the corpora are gathered from different applications, it would
 be a problem to parse various formats. Expanda helps to build corpus simply at
 once by setting build configuration.
@@ -24,7 +24,7 @@ once by setting build configuration.
 * Supports multi-processing
 * Extremely less memory usage
 * Don't need to write new codes for each corpus. Just write one line for adding
-  new corpus.
+  a new corpus.
 
 ## Dependencies
 * nltk
@@ -53,18 +53,19 @@ $ python setup.py install
 ```
 
 ## Build your first dataset
-Let's build **Wikipedia** dataset by using Expanda. First of all, install Expanda.
+Let's build **Wikipedia** dataset by using Expanda. First of all, install
+Expanda.
 ```console
 $ pip install expanda
 ```
-Next, create workspace to build dataset by running:
+Next, create a workspace to build dataset by running:
 ```console
 $ mkdir workspace
 $ cd workspace
 ```
-Then, download wikipedia dump file from [here](https://dumps.wikimedia.org/).
-In this example, we are going to test with [part of enwiki](https://dumps.wikimedia.org/enwiki/20200520/enwiki-20200520-pages-articles1.xml-p1p30303.bz2).
-Download the file through web browser, move to `workspace/src` and rename to
+Then, download Wikipedia dump file from [here](https://dumps.wikimedia.org/).
+In this example, we are going to test with [part of the wiki](https://dumps.wikimedia.org/enwiki/20200520/enwiki-20200520-pages-articles1.xml-p1p30303.bz2).
+Download the file through the browser, move to `workspace/src` and rename to
 `wiki.xml.bz2`. Instead, run below code:
 ```console
 $ mkdir src
@@ -86,7 +87,7 @@ control-tokens      = <s>
 input-files         =
     --expanda.ext.wikipedia     src/wiki.xml.bz2
 ```
-Current directory structure of `workspace` should be as follows:
+The current directory structure of `workspace` should be as follows:
 ```
 workspace
 ├── src

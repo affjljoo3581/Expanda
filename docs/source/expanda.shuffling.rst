@@ -9,11 +9,11 @@ Common shuffling algorithms ensure almost perfect randomness and are efficient
 while shuffling large files. For instance, using shuf_ to shuffle 5GB of file
 may occur memory error in small system. In most cases, the whole data would be
 copied to the memory. Besides, some algorithms require several times more than
-the memory.
+memory.
 
 Let's consider the case of solving NLP problems in deep learning. Because a
-larger corpus leads better performance, many texts should be gathered into the
-corpus. GPT-2 was trained with **40GB** text ([#]_) and RoBERTa was so with
+larger corpus leads to better performance, many texts should be gathered into
+the corpus. GPT-2 was trained with **40GB** text ([#]_) and RoBERTa was so with
 **160GB** text ([#]_). In fact, shuffling whole data in the memory is
 impossible. Due to the large file size, other memory-efficient methods are
 needed.
@@ -49,17 +49,18 @@ codes are enormously inefficient? That is probably related to python's I/O
 implementation. First, **python is too slow to handle large files in detail**.
 Python implementation of shuf_ is about 3 times slower than the original. To
 reduce I/O bottlenecks, python provides *buffering* in file. However, if the
-file is seeked to random offset, then the buffered data will become useless.
-Consequently, you cannot use *buffering* when using *seeking* frequently.
+position of file is moved to random offset, then the buffered data will become
+useless. Consequently, you cannot use *buffering* when using *seeking*
+frequently.
 
 Hence, we decided to approximate shuffling. We empirically found optimum
 seeking counts. In our experiments, seeking **10M** times is not critical for
-performance. According to the result, we propose revised algorithm to shuffle
-large files efficiently. A file would be *seeked* up to **10M** times. Each
-seek position indicates a start of chunk. The chunks would be shuffled locally
-and randomly distributed to buckets. Basically, twice as many buckets as chunks
-are needed. After splitting the file randomly, the buckets will be merged into
-one.
+performance. According to the result, we propose a revised algorithm to shuffle
+large files efficiently. *Seeking file* would be called up to **10M** times.
+Each seeks position indicates a start of chunk. The chunks would be shuffled
+locally and randomly distributed to buckets. Basically, twice as many buckets
+as chunks are needed. After splitting the file randomly, the buckets will be
+merged into one.
 
 We have observed that the approximation ensures almost perfect randomness and
 seems sufficient in natural language. We tested the algorithm with 5GB of file

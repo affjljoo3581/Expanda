@@ -9,8 +9,8 @@ Expanda documentation
 Introduction
 ------------
 **Expanda** is an **integrated corpus-building environment**. Expanda provides
-integrated pipelines for building corpus dataset. Building corpus dataset
-requires several complicated pipelines such as parsing, shuffling and
+integrated pipelines for building a corpus dataset. Building corpus dataset
+requires several complicated pipelines such as parsing, shuffling, and
 tokenization. If the corpora are gathered from different applications, it would
 be a problem to parse various formats. Expanda helps to build corpus simply at
 once by setting build configuration.
@@ -55,7 +55,7 @@ You can use the features of Expanda in command-line.
 Build Dataset
 ^^^^^^^^^^^^^
 ``expanda build`` command builds corpus dataset through the given build
-configuration file. Detail is as follows:
+configuration file. The detail is as follows:
 
 .. code:: console
 
@@ -74,7 +74,7 @@ Expanda loads extensions by importing corresponding modules. If certain
 extensions are installed in **different virtual environment**, Expanda cannot
 use the extensions. So before building the dataset, check whether the
 extensions are accessible or not. ``expanda show`` command shows the details of
-the given extension. Detail is as follows:
+the given extension. The detail is as follows:
 
 .. code:: console
 
@@ -90,7 +90,7 @@ List of Required Extensions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``expanda list`` command shows a list of extensions defined in the given
 configuration. Namely, you can see which extensions are used in this dataset.
-Detail is as follows:
+The detail is as follows:
 
 .. code:: console
 
@@ -104,8 +104,9 @@ Detail is as follows:
 
 Build Configuration
 -------------------
-Before building corpus, you need to setup *build configuration* in workspace
-first. The configuration file follows **INI format**. Here is an example:
+Before building a corpus, you need to setup a *build configuration* in the
+workspace first. The configuration file follows **INI format**. Here is an
+example:
 
 .. code:: ini
 
@@ -182,7 +183,7 @@ modules can be used in command-line independently.
 
 Extensions
 ----------
-Expanda provides basic extensions to help parsing corpus file. You can use the
+Expanda provides basic extensions to help parsing corpus files. You can use the
 extensions without any additional installations.
 
 .. toctree::

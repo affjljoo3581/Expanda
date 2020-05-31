@@ -3,13 +3,13 @@ expanda.ext.wikipedia
 
 Introduction
 ------------
-**Wikipedia** ([#]_) is one of the most famous datasets in NLP. It has enormous
-scale of text and contains diverse categories. Also, Wikipedia has
+**Wikipedia** ([#]_) is one of the most famous datasets in NLP. It has an
+enormous scale of text and contains diverse categories. Also, Wikipedia has
 multi-lingual versions of articles. It is frequently used to pretrain NLP
 models (especially language model).
 
-Data structure of Wikipedia is based on *MediaWiki* ([#]_) which is a free and
-open-source wiki engine. All Wikipedia contents are written in *MediaWiki*
+The data structure of Wikipedia is based on *MediaWiki* ([#]_) which is a free
+and open-source wiki engine. All Wikipedia contents are written in *MediaWiki*
 grammar. There are many nested structures and messy components in raw contents.
 Thanks to mwparserfromhell_, MediaWiki-formatted contents would be parsed and
 each component would be altered to plain texts.
