@@ -88,24 +88,35 @@ def _process_article_worker(output_file: str, queue: Queue):
                 break
 
             # Write cleaned wiki articles into the output file.
-            fp.write(_clean_wiki_text(code, patterns) + '\n')
+            fp.write(_clean_wiki_text(code, patterns) + '\n\n')
 
 
 def _tokenize_sentences_worker(input_file: str, output_file: str,
-                               min_len: int):
+                               min_len: int, max_len: int,
+                               split_sent: bool = True):
     with open(input_file, 'r', encoding='utf-8') as src, \
             open(output_file, 'w', encoding='utf-8') as dst:
+        total_lines = ''
         for line in src:
+            if not line.strip():
+                if not split_sent and len(total_lines.strip()) > min_len:
+                    dst.write(total_lines.strip() + '\n')
+                continue
+
             for s in kss.split_sentences(line):
-                s = s.strip()
-                if len(s) < min_len:
-                    continue
-
                 # Skip extraordinary sentences
-                if s[0] in '*<-|':
+                s = s.strip()
+                if s and s[0] in '*<-|':
                     continue
 
-                dst.write(s + '\n')
+                if split_sent:
+                    if len(s) > min_len and len(s.strip()) < max_len:
+                        dst.write(s + '\n')
+                else:
+                    if len(total_lines) + len(s) > max_len:
+                        dst.write(total_lines.strip() + '\n')
+                        total_lines = ''
+                    total_lines += s + ' '
 
 
 def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
@@ -152,7 +163,9 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
         w = Process(target=_tokenize_sentences_worker,
                     args=(extract_filenames[i],
                           split_filenames[i],
-                          args['min-length']))
+                          args['min-length'],
+                          args['max-length'],
+                          args['split-sent']))
         w.daemon = True
         w.start()
 
@@ -183,6 +196,8 @@ __extension__ = {
     'main': _extract_namu_wiki_json,
     'arguments': {
         'num-cores': {'type': int, 'default': 1},
-        'min-length': {'type': int, 'default': 50}
+        'min-length': {'type': int, 'default': 50},
+        'max-length': {'type': int, 'default': 1000},
+        'split-sent': {'type': str, 'default': 'true'},
     }
 }
