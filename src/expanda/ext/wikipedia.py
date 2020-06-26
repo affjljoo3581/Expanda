@@ -223,7 +223,7 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
                           lang,
                           args['min-length'],
                           args['max-length'],
-                          args['split-sent'] == 'True'))
+                          args['split-sent'] == 'true'))
         w.daemon = True
         w.start()
 
@@ -256,6 +256,6 @@ __extension__ = {
         'num-cores': {'type': int, 'default': 1},
         'min-length': {'type': int, 'default': 50},
         'max-length': {'type': int, 'default': 1000},
-        'split-sent': {'type': str, 'default': 'True'},
+        'split-sent': {'type': str, 'default': 'true'},
     }
 }
