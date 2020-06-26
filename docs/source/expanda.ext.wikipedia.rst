@@ -37,7 +37,7 @@ Details
         num-cores    : int    (default: -1)
         min-length   : int    (default: 50)
         max-length   : int    (default: 1000)
-        split-sent   : str    (default: True)
+        split-sent   : str    (default: true)
 
 Configuration Example
 ---------------------
@@ -49,7 +49,7 @@ Configuration Example
     num-cores           = 8
     min-length          = 100
     max-length          = 1000
-    split-sent          = False
+    split-sent          = false
 
     # ...
 
