@@ -26,10 +26,19 @@ def test_splitting_sentences():
 
     # Split the sentences.
     wikipedia._prepare_tokenizing_sentences('en')
-    wikipedia._tokenize_sentences_worker(input_file, output_file, 'en', 0)
+    wikipedia._tokenize_sentences_worker(input_file, output_file, 'en', 0, 100)
 
     # Check if sentences are splitted well.
     with open(output_file, 'r') as fp:
         lines = fp.readlines()
         assert len(lines) == 3
         assert ' '.join([line.strip() for line in lines]) == dummy
+
+    # Check if splitting into chuncks works well.
+    wikipedia._tokenize_sentences_worker(
+        input_file, output_file, 'en', 0, 100, split_sent=False)
+
+    with open(output_file, 'r') as fp:
+        lines = fp.readlines()
+        assert len(lines) == 1
+        assert lines[0].strip() == dummy
