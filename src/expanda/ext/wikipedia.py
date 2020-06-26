@@ -109,7 +109,8 @@ def _prepare_tokenizing_sentences(lang: str):
 
 
 def _tokenize_sentences_worker(input_file: str, output_file: str,
-                               lang: str, min_len: int):
+                               lang: str, min_len: int, max_len: int,
+                               split_sent: bool = True):
     if lang == 'en':
         import nltk
         nltk.data.find('tokenizers/punkt')
@@ -123,12 +124,22 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
 
     with open(input_file, 'r', encoding='utf-8') as src, \
             open(output_file, 'w', encoding='utf-8') as dst:
+        total_lines = ''
         for line in src:
             for s in tokenize_sentence(line):
-                if len(s.strip()) < min_len:
-                    continue
+                if split_sent:
+                    if len(s.strip()) > min_len and len(s.strip()) < max_len:
+                        dst.write(s.strip() + '\n')
+                else:
+                    if len(total_lines) + len(s) > max_len:
+                        dst.write(total_lines.strip() + '\n')
+                        total_lines = ''
 
-                dst.write(s.strip() + '\n')
+                    total_lines += s.strip() + ' '
+
+            # Write the rest sentences.
+            if not split_sent and len(total_lines.strip()) > min_len:
+                dst.write(total_lines.strip() + '\n')
 
 
 def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
@@ -210,7 +221,9 @@ def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
                     args=(extract_filenames[i],
                           split_filenames[i],
                           lang,
-                          args['min-length']))
+                          args['min-length'],
+                          args['max-length'],
+                          args['split-sent'] == 'True'))
         w.daemon = True
         w.start()
 
@@ -241,6 +254,8 @@ __extension__ = {
     'main': _extract_wiki_corpus,
     'arguments': {
         'num-cores': {'type': int, 'default': 1},
-        'min-length': {'type': int, 'default': 50}
+        'min-length': {'type': int, 'default': 50},
+        'max-length': {'type': int, 'default': 1000},
+        'split-sent': {'type': str, 'default': 'True'},
     }
 }
