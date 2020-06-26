@@ -94,7 +94,7 @@ def _process_article_worker(output_file: str, ns: List[str], queue: Queue):
                 break
 
             # Write cleaned wiki articles into the output file.
-            fp.write(_clean_wiki_text(code, ns) + '\n')
+            fp.write(_clean_wiki_text(code, ns) + '\n\n')
 
 
 def _prepare_tokenizing_sentences(lang: str):
@@ -126,6 +126,12 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
             open(output_file, 'w', encoding='utf-8') as dst:
         total_lines = ''
         for line in src:
+            if not line.strip():
+                # Write the rest sentences.
+                if not split_sent and len(total_lines.strip()) > min_len:
+                    dst.write(total_lines.strip() + '\n')
+                continue
+
             for s in tokenize_sentence(line):
                 if split_sent:
                     if len(s.strip()) > min_len and len(s.strip()) < max_len:
@@ -136,10 +142,6 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
                         total_lines = ''
 
                     total_lines += s.strip() + ' '
-
-            # Write the rest sentences.
-            if not split_sent and len(total_lines.strip()) > min_len:
-                dst.write(total_lines.strip() + '\n')
 
 
 def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
