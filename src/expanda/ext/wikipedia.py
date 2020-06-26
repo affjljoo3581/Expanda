@@ -133,15 +133,16 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
                 continue
 
             for s in tokenize_sentence(line):
+                s = s.strip()
+
                 if split_sent:
-                    if len(s.strip()) > min_len and len(s.strip()) < max_len:
-                        dst.write(s.strip() + '\n')
+                    if len(s) > min_len and len(s) < max_len:
+                        dst.write(s + '\n')
                 else:
                     if len(total_lines) + len(s) > max_len:
                         dst.write(total_lines.strip() + '\n')
                         total_lines = ''
-
-                    total_lines += s.strip() + ' '
+                    total_lines += s + ' '
 
 
 def _extract_wiki_corpus(input_file: str, output_file: str, temporary: str,
