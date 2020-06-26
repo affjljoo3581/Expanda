@@ -20,7 +20,7 @@ def test_splitting_sentences():
     output_file = random_filename(tempfile.gettempdir())
 
     # Write dummy file to `input_file`.
-    dummy = 'Nice to meet you Dr. John. Welcome! How are you?'
+    dummy = 'Nice to meet you Dr. John. Welcome! How are you?\n\n'
     with open(input_file, 'w') as fp:
         fp.write(dummy)
 
@@ -32,7 +32,7 @@ def test_splitting_sentences():
     with open(output_file, 'r') as fp:
         lines = fp.readlines()
         assert len(lines) == 3
-        assert ' '.join([line.strip() for line in lines]) == dummy
+        assert ' '.join([line.strip() for line in lines]) == dummy.strip()
 
     # Check if splitting into chuncks works well.
     wikipedia._tokenize_sentences_worker(
@@ -40,5 +40,4 @@ def test_splitting_sentences():
 
     with open(output_file, 'r') as fp:
         lines = fp.readlines()
-        assert len(lines) == 1
-        assert lines[0].strip() == dummy
+        assert lines[0].strip() == dummy.strip()

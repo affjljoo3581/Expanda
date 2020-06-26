@@ -21,16 +21,24 @@ def test_splitting_sentences():
     output_file = random_filename(tempfile.gettempdir())
 
     # Write dummy file to `input_file`.
-    dummy = '안녕하세요. 반갑습니다! 어떠신가요? 괜찮습니다...ㅎㅎ'
+    dummy = '안녕하세요. 반갑습니다! 어떠신가요? 괜찮습니다...ㅎㅎ\n\n'
     with open(input_file, 'w') as fp:
         fp.write(dummy)
 
     # Split the sentences.
     namuwiki._tokenize_sentences_worker(
-        input_file, output_file, min_len=0)
+        input_file, output_file, min_len=0, max_len=100)
 
     # Check if sentences are splitted well.
     with open(output_file, 'r') as fp:
         lines = fp.readlines()
         assert len(lines) == 4
-        assert ' '.join([line.strip() for line in lines]) == dummy
+        assert ' '.join([line.strip() for line in lines]) == dummy.strip()
+
+    # Check if splitting into chuncks works well.
+    namuwiki._tokenize_sentences_worker(
+        input_file, output_file, 0, 100, split_sent=False)
+
+    with open(output_file, 'r') as fp:
+        lines = fp.readlines()
+        assert lines[0].strip() == dummy.strip()
