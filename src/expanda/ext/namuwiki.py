@@ -165,7 +165,7 @@ def _extract_namu_wiki_json(input_file: str, output_file: str, temporary: str,
                           split_filenames[i],
                           args['min-length'],
                           args['max-length'],
-                          args['split-sent']))
+                          args['split-sent'] == 'true'))
         w.daemon = True
         w.start()
 
