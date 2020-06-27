@@ -143,7 +143,14 @@ Basically, you need to configure two sections -- **tokenization** and
 described in :ref:`tokenization`. You can declare symbol names and define
 tokenization options. In **build** section, you can set input, output files and
 temporary directory. ``balancing`` determines whether to modify the amount of
-each corpus uniformly. 
+each corpus uniformly. Note that others like ``unk-token`` and
+``control-tokens`` should be given.
+
+If there is any pretrained vocabulary file for corpora, you can skip training
+tokenizer model by setting ``input-vocab`` in **build** section to the
+vocabulary file path. In this case, ``subset-size``, ``vocab-size`` and
+``limit-alphabet`` arguments in **tokenization** section would be ignored and,
+therefore, you don't need to adjust the arguments in detail.
 
 Perhaps extensions used for constructing the dataset would need their own
 options in extracting. You can configure the options in each section with the
