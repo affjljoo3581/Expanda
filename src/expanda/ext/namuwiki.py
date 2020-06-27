@@ -99,8 +99,10 @@ def _tokenize_sentences_worker(input_file: str, output_file: str,
         total_lines = ''
         for line in src:
             if not line.strip():
+                # Write the rest sentences.
                 if not split_sent and len(total_lines.strip()) > min_len:
                     dst.write(total_lines.strip() + '\n')
+                total_lines = ''
                 continue
 
             for s in kss.split_sentences(line):
