@@ -5,7 +5,7 @@ dist.Distribution().fetch_build_eggs(['Cython'])
 
 setup(
     name='Expanda',
-    version='1.2.1',
+    version='1.2.2',
 
     author='Jungwoo Park',
     author_email='affjljoo3581@gmail.com',
