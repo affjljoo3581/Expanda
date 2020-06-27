@@ -87,12 +87,13 @@ def _build_corpus(config_file: str):
     config = ConfigParser()
     config.read(config_file)
 
+    # Read arguments from configuration file.
     input_files = config['build'].get('input-files')
     input_files = [re.match(r'--(.*?)\s+(.*)', line.strip()).groups()
                    for line in input_files.splitlines(False)
                    if line]
+    reuse_vocab = config['build'].get('input-vocab', None)
 
-    # Read arguments from configuration file.
     temporary = config['build'].get('temporary-path', './tmp')
     vocab = config['build'].get('output-vocab', 'build/vocab.txt')
     split_ratio = config['build'].getfloat('split-ratio', 0.1)
@@ -160,8 +161,14 @@ def _build_corpus(config_file: str):
 
     # Train subword tokenizer and tokenize the corpus.
     print('[*] complete preparing corpus. start training tokenizer...')
-    train_tokenizer(raw_corpus, vocab, temporary, subset_size, vocab_size,
-                    limit_alphabet, unk_token, control_tokens)
+
+    if reuse_vocab is None:
+        train_tokenizer(raw_corpus, vocab, temporary, subset_size, vocab_size,
+                        limit_alphabet, unk_token, control_tokens)
+    else:
+        # If re-using pretrained vocabulary file, skip training tokenizer.
+        print(f'[*] use the given vocabulary file [{reuse_vocab}].')
+        shutil.copyfile(reuse_vocab, vocab)
 
     print('[*] create tokenized corpus.')
     tokenize_filename = random_filename(temporary)
