@@ -17,6 +17,8 @@ tokenization. If the corpora are gathered from different applications, it would
 be a problem to parse various formats. Expanda helps to build corpus simply at
 once by setting build configuration.
 
+For more information, see also [documentation](https://expanda.readthedocs.io/en/latest/).
+
 ## Main Features
 * Easy to build, simple for adding new extensions
 * Manages build environment systemically
